@@ -5,12 +5,11 @@
 #include <vector>
 #include <math.h>
 #include "Pesce.h"
-
-
+#include "utilities.h"
 
 /*Class: School
 * Description: classe che descrive un banco di pesci
-*
+* cambiamo cose, mettiamo una coppia nel vector con -1 nel campo del banco per i pesci che muoiono nel primo campo della coppia
 * Attributes:
 *	school: vector di classe pesce
 *	dir: array delle direzioni verso le quali si può muovere il banco
@@ -23,23 +22,22 @@
 */
 class School {
 private:
-	vector<Pesce*> school;
-	float dir[3];
-	float dimensions[3]; //dimensioni del banco (lunghezza, larghezza, altezza, modellato come un cilindro
+	vector<pair<int, int>> school;
+	//Pesce p[FISHNUMBER];
+	vector<Pesce> p;
+	float dir[3] = { 0,0,0 };
+	float dimensions[3] = { 0,0,0 }; //dimensioni del banco (lunghezza, larghezza, altezza, modellato come un cilindro
 	float max[3] = { 0, 0, 0 };
 	float min[3] = { 0, 0, 0 };
-	float* centro; //fulcro attorno al quale i pesci si stringono in presenza di un predatore
-	float theta; //angolo rispetto senza z
+	float centro[3] = { 0, 0, 0 } ; //fulcro attorno al quale i pesci si stringono in presenza di un predatore
+	float theta = 0; //angolo rispetto senza z
 public:
-	School() { dir[0] = 0.0; dir[1] = 0.0; }
-	School(Pesce* p) { dir[0] = 0.0; dir[1] = 0.0; school.push_back(p); }
-	School(vector<Pesce*> s);
+	School();
 	void setDir(float* arr);
-	void addPesce(Pesce* p) { school.push_back(p); }
-	vector<Pesce*> getSchool() { return school; }
-	void computeAVGDir();
-	void Merge(School S);
-	vector<School> split();
-	void DrawSchool();
-	void DrawOcean(vector<School>& Oceano);
+	void addPesce();
+	vector<pair<int, int>> getSchool() { return school; }
+	vector<Pesce> getP() { return p; }
+	void Nuota();
+	void Merge();
+	void orderVector();
 };

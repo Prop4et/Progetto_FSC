@@ -90,4 +90,4 @@ float* AllForcesFish(Pesce, Pesce);
 #define POTENZIALI
 #endif
 */
-void SetAccelerazioni(vector<School>& Oceano);
+void SetAccelerazioni(School& Oceano);

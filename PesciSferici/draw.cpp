@@ -28,43 +28,35 @@ void normale9f(float x1, float y1, float z1, float x2, float y2, float z2, float
     nx /= nn; ny /= nn; nz /= nn;
     glNormal3f(nx, ny, nz);
 }
-void DrawOcean(vector<School>& Oceano)
+
+void DrawSchool(School& s)
 {
-    Merge(Oceano);
-    SetAccelerazioni(Oceano);
-    for (int i = 0; i < Oceano.size(); i++) {
-        Oceano[i].DrawSchool();
+    s.Nuota();
+    vector<Pesce> p = s.getP();
+    for (int i = 0; i < p.size(); i++)
+    {
+        glPushMatrix();
+        glTranslated(p[i].getPos()[0], p[i].getPos()[1], p[i].getPos()[2]);
+        glCallList(SFERA);
+        glPopMatrix();
     }
+
+}
+
+void DrawOcean(School& s)
+{
+    SetAccelerazioni(s);
+    s.Merge();
+    DrawSchool(s);
 }
 // ********************************************************************************************************
 void initOcean() {
-    //prova per potenziale repulsivo+attrattivo.
-    float x, y, z, vx, vy, vz;
-    x = y = z = vx = vy = vz= 0;
-    for (int i = 0; i < FISHNUMBER; i++) {
-        pos[i][0] = x;
-        pos[i][1] = y;
-        pos[i][2] = z;
-        x += 2;
-        y += 2;
-        srand(time(NULL));
-        vx = rand() % 10;
-        vy = rand() % 10;
-        vel[i][0] = vx;
-        vel[i][1] = vy;
-        vel[i][2] = 0;
-        p[i] = Pesce(pos[i], vel[i]);
-    }
-   
-    for (int i = 0; i < SCHOOLNUMBER; i++) {
-        s[i] = School(&p[i]);
-        pozza.push_back(s[i]);
-    }
+    s = School();
 }
 
 
 void draw_scene(void) {
-    DrawOcean(pozza);
+    DrawOcean(s);
 
     // ********************************************************************************************************
     /*void draw_scene(void) {

@@ -73,11 +73,17 @@ float ProdottoScalare3(float* AnyVet1, float* AnyVet2)
 		}
 }*/
 
-
-void Merge(vector<School>& Oceano)
+/*
+void Merge(School& s)
 {
-	//sta cosa va rifatta, perche' potrebbe succedere che un pesce in un banco si stacchi dal banco per unirsi ad un altro mentre altri pesci no
-	//quindi si deve fare magari che se piu' della meta' del banco vede il 
+	
+
+
+
+
+
+
+
 	for (int a = 0; a < Oceano.size(); a++) {
 		for (int b = 0; b < Oceano[a].getSchool().size(); b++)
 		{
@@ -92,4 +98,4 @@ void Merge(vector<School>& Oceano)
 						}
 		}
 	}
-}
+}*/

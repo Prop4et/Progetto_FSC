@@ -11,6 +11,7 @@ void initOcean();
 void normale9f(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3);
 void draw_scene(void);
 void draw_pesce2(void);
+void DrawOcean(School& s);
 
 //prova per le buche. Per avere moto circolare su piano xy: vy=10, su piano xz vz=10
 /*float posizione[3] = { 10,10,0 };
@@ -29,12 +30,7 @@ Pesce collidente(posizione, vel);
 Pesce pesciolini[2] = { fermo, collidente };
 float t = 0;*/
 
-
-float pos[FISHNUMBER][3];
-float vel[FISHNUMBER][3];
-Pesce p[FISHNUMBER];
-School s[SCHOOLNUMBER];
-vector<School> pozza;
+School s;
 
 /*
 //prova per potenziale repulsivo+attrattivo.

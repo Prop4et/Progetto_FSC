@@ -181,11 +181,15 @@ float RepulsivePotentialFish(Pesce PesceGen, Pesce PesceSub) //il primo pesce ge
 //##########################
 //Forze Attrative per pesci-Banco (overload), da rifare se si introducono attributi nuovi del banco
 
-float AttractiveForceSchoolX(School Banco, Pesce Fish) //calcola la media della posizone dei pesci del banco(centro) e la velocità media poi fa il conto delle dimensioni massime del banco
+//ho il vector ordinato secondo il banco, quindi daje, dovrebbe esse facile ora fa sta cosa dato che e' ordinato
+/*
+float AttractiveForceSchoolX(School& s) //calcola la media della posizone dei pesci del banco(centro) e la velocità media poi fa il conto delle dimensioni massime del banco
 {
 	float AvgPosSchool[3]{ 0,0,0 }, AvgVelSchool[3]{ 0,0,0 }, r{ 1 }, maxR[]{ 0,0,0 };
 	for (int i = 0; i < 3; i++)
 	{
+
+
 		for (int k = 0; k < Banco.getSchool().size(); k++)
 		{
 			AvgPosSchool[i] += Banco.getSchool()[k]->getPos()[i];
@@ -201,7 +205,7 @@ float AttractiveForceSchoolX(School Banco, Pesce Fish) //calcola la media della 
 		r = maxR[i] > r ? maxR[i] : r;
 	}
 
-	return AttractiveForceSchoolX(AvgPosSchool, AvgVelSchool, Fish.getPos(), r);
+	return AttractiveForceSchoolX(AvgPosSchool, AvgVelSchool, Pesce.getPos(), r);
 }
 
 float AttractiveForceSchoolY(School Banco, Pesce Fish) //calcola la media della posizone dei pesci del banco(centro) e la velocità media poi fa il conto delle dimensioni massime del banco
@@ -262,7 +266,7 @@ void AttractiveForcesSchool(School Banco, Pesce Fish, float* arr) //calcola la m
 	{
 		//calcola pos e vel media del banco (questa parte è da spostare tra le funzioni del banco)
 		for (int k = 0; k < Banco.getSchool().size(); k++)
-		{	
+		{
 			AvgPosSchool[i] += Banco.getSchool()[k]->getPos()[i];
 			AvgVelSchool[i] += Banco.getSchool()[k]->getVel()[i];
 		}
@@ -311,20 +315,37 @@ float* AllForcesFish(Pesce FishGen, Pesce FishSub)
 {
 	return 0;
 }
-
-int Weight(vector<School>& Oceano)
+*/
+//posso farlo perche' il vector e' ordinato
+int WeightTot(vector<pair<int, int>> school) {
+	int pesoTot = 0;
+	for (int i = 0; i < school.size(); i++)
+		if (school[i].first != -1)
+			pesoTot++;
+	return pesoTot;
+}
+int Weight(vector<pair<int, int>> school, int indexS, int* i)
 {
 	int peso = 0;
-	for (int a = 0; a < Oceano.size(); a++)
-		peso += Oceano[a].getSchool().size();
+	while ((*i < school.size()) && (indexS == school[*i].first)) {
+		peso++;
+		*i = *i + 1;
+
+	}
 	return peso;
-
 }
-
-void SetAccelerazioni(vector<School>& Oceano)
+void SetAccelerazioni(School& s)
 {
-	int pesoTot = Weight(Oceano);
-	int pesoBanco;
+	//int prevS = -1;
+	int pesoTot = WeightTot(s.getSchool());
+	for (int i = 0; i < s.getSchool().size(); i++) {
+		int indexS = s.getSchool()[i].first;
+		int pesoBanco = Weight(s.getSchool(), indexS, &i);
+		
+	}
+	/*int pesoTot = Weight(Oceano);
+	int pesoBanco;*/
+
 	for (int a = 0; a < Oceano.size(); a++)
 		for (int b = 0; b < Oceano[a].getSchool().size(); b++)
 		{
@@ -374,5 +395,5 @@ void SetAccelerazioni(vector<School>& Oceano)
 
 			}
 			Fish->setAcc(accTot);
-		}
+		}*/
 }
