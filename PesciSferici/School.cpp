@@ -12,7 +12,7 @@ School::School() {
 		pos[i][2] = z;
 		x += 2;
 		y += 2;
-		srand(time(NULL));
+		//srand(time(NULL));
 		vx = rand() % 10;
 		vy = rand() % 10;
 		vel[i][0] = vx;
@@ -67,17 +67,59 @@ void School::Merge() {
 				if (compIndexS != indexS) {
 					compIndexP = school[j].second;
 					//se la distanza fra i due pesci
-					if (dist(p[indexP].getPos(), p[indexP].getPos()) < MinDist)
+					if (dist(p[indexP].getPos(), p[compIndexP].getPos()) < MinDist)
 						//assegno il minimo tra i due indici se i pesci fanno parte dello stesso banco
 						//la funzione minimo viene applicato perche' il vector non ha valori monotoni crescenti nel primo campo della coppia
 						//mentre nel secondo si'
-						//niente sche c'ho messo il sort ora e' molto carino pero' il min ce lo lascio comunque
 						school[j].first = min(indexS, compIndexS);
 				}
 			}
 		}
 	}
-	sort(school.begin(), school.end());
+//	sort(school.begin(), school.end());
+}
+
+void School::SetAccelerazioni()
+{
+	//int prevS = -1;
+	vector<int> perceivedSchools;
+	int pesoTot = WeightTot(school);
+	for (int i = 0; i < school.size(); i++) {
+
+		float accTot[3] = { 0.f, 0.f, 0.f };
+		float forza[3];
+		//----------------------
+		//indice del banco in esame
+		int indexS = school[i].first;
+		//indice del pesce appartenente al banco in esame
+		int indexP = school[i].second;
+		//int pesoBanco = Weight(s.getSchool(), indexS, &i);
+		seenSchools(school, p, perceivedSchools, indexP);
+		for (int j = 0; j < perceivedSchools.size(); j++) {
+			int pesoBanco = Weight(school, perceivedSchools[j]);
+			AttractiveForcesSchool(school, p, perceivedSchools[j], indexP, forza);
+			for (int u = 0; u < 3; u++) {
+				accTot[u] += (forza[u] / massa) * pesoBanco / pesoTot;
+			}
+			//consideriamo i potenziali repulsivi quindi escludiamo di star considerando lo stesso pesce
+			for (int k = 0; k < school.size(); k++) {
+				//se il pesce preso in considerazione fa parte del banco preso in considerazione e non e' il pesce originale e si trova ad una distanza apprezzabile dal pesce originale
+				if ((school[k].first == perceivedSchools[j]) && (indexP != school[k].second) && (dist(p[indexP].getPos(), p[school[k].second].getPos()) < MinDist)) {
+					RepulsiveForcesFish(p[school[k].second], p[indexP], forza);
+					for (int u = 0; u < 3; u++)
+						accTot[u] += forza[u] / massa;
+					for (int h = 0; h < 8; h++)
+					{
+						float* PosHole = p[school[k].second].getHoles()[h].getPos();
+						AttractiveForcesHole(p[indexP].getPos(), PosHole, forza);
+						for (int u = 0; u < 3; u++)
+							accTot[u] += forza[u] / massa;
+					}
+				}
+			}
+		}
+		p[indexP].setAcc(accTot);
+	}
 }
 
 /*void School::setDir(float* arr) {
@@ -109,6 +151,7 @@ void draw_direction(float x, float y, float z) {
 	glVertex3f(0, 0, 0); glVertex3f(x, y, z);
 	glEnd();
 }
+
 /*
 void School::Merge(School S)
 {

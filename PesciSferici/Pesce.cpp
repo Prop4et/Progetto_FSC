@@ -41,6 +41,7 @@ void Pesce::setVel(float* v) {
 }
 
 void Pesce::setAcc(float* a) {
+
     for (int i = 0; i < DIMARR; i++)
         acc[i] = a[i];
 }

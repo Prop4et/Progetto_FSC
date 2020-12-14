@@ -45,8 +45,8 @@ void DrawSchool(School& s)
 
 void DrawOcean(School& s)
 {
-    SetAccelerazioni(s);
     s.Merge();
+    s.SetAccelerazioni();
     DrawSchool(s);
 }
 // ********************************************************************************************************

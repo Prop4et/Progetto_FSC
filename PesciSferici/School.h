@@ -6,7 +6,7 @@
 #include <math.h>
 #include "Pesce.h"
 #include "utilities.h"
-
+#include "Potenziali.h"
 /*Class: School
 * Description: classe che descrive un banco di pesci
 * cambiamo cose, mettiamo una coppia nel vector con -1 nel campo del banco per i pesci che muoiono nel primo campo della coppia
@@ -39,5 +39,5 @@ public:
 	vector<Pesce> getP() { return p; }
 	void Nuota();
 	void Merge();
-	void orderVector();
+	void SetAccelerazioni();
 };
