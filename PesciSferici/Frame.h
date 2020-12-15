@@ -1,5 +1,4 @@
 #pragma once
-
 #include <FL/Fl.H>
 #include <FL/Fl_Gl_Window.H>
 #include <Windows.h>
@@ -23,6 +22,7 @@ private:
 public:
 	double ruotaX, ruotaY, ruotaZ, zoom;
 	double moveUp, moveSide, scale;
+	int clickX, clickY, prevX, prevY;
 	int prevx = 0;
 	int prevy = 0;
 	int  handle(int);

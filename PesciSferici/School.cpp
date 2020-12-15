@@ -13,8 +13,8 @@ School::School() {
 		x += 2;
 		y += 2;
 		//srand(time(NULL));
-		vx = rand() % 10;
-		vy = rand() % 10;
+		vx = 2;
+		vy = 1;
 		vel[i][0] = vx;
 		vel[i][1] = vy;
 		vel[i][2] = 0;
@@ -53,7 +53,6 @@ void School::Nuota() {
 }
 
 void School::Merge() {
-
 	int indexS, indexP, compIndexS, compIndexP;
 	indexS = indexP = compIndexS = compIndexP = -1;
 	for (int i = 0; i < school.size() - 1; i++) {
@@ -76,7 +75,47 @@ void School::Merge() {
 			}
 		}
 	}
-//	sort(school.begin(), school.end());
+	sort(school.begin(), school.end());
+}
+void School::Split() {
+	int nSchool, nTimeDist;
+	int indexS, indexP, compIndexS, compIndexP;
+	int lastIndex = school.back().first;
+	indexS = indexP = compIndexS = compIndexP = -1;
+	for (int i = 0; i < school.size() - 1; i++) {
+		//estraggo l'indice del banco di cui fa parte il pesce
+		indexS = school[i].first;
+		if (indexS != -1) {
+			//estraggo l'indice del pesce
+			nSchool = nTimeDist = 0;
+			indexP = school[i].second;
+			for (int j = i + 1; j < school.size(); j++) {
+				compIndexS = school[j].first;
+				if (compIndexS == indexS) {
+					nSchool++;
+					compIndexP = school[j].second;
+					//se la distanza fra i due pesci
+					if (dist(p[indexP].getPos(), p[compIndexP].getPos()) > MinDist)
+						//assegno il minimo tra i due indici se i pesci fanno parte dello stesso banco
+						//la funzione minimo viene applicato perche' il vector non ha valori monotoni crescenti nel primo campo della coppia
+						//mentre nel secondo si'
+						nTimeDist++;
+				}
+			}
+			if (nTimeDist == nSchool) {
+				lastIndex++;
+				int appI = i;
+				int appP = school[i].second;
+				for (int j = i + 1; j < school.size(); j++) {
+					school[appI].first = school[j].first;
+					school[appI].second = school[j].second;
+					appI++;
+				}
+				school[appI].first = lastIndex;
+				school[appI].second = appP;
+			}
+		}
+	}
 }
 
 void School::SetAccelerazioni()
@@ -143,33 +182,6 @@ void School::computeAVGDir() {
 //TODO: calcolare l'asse per centrare il banco di pesci
 //ossia calcolare la lunghezza del banco (EZ) e calcolare l'angolo della direzione media del banco (?)
 //come se calcola l'angolo, in base a cosa? Che poi in realtà sono due angoli, uno tra x,z e uno tra x,y o z,y dipende
-
-void draw_direction(float x, float y, float z) {
-	glColor3f(1, 0, 0);
-	glLineWidth(2);
-	glBegin(GL_LINES);
-	glVertex3f(0, 0, 0); glVertex3f(x, y, z);
-	glEnd();
-}
-
-/*
-void School::Merge(School S)
-{
-	for (int i = 0; i < S.getSchool().size(); i++)
-		school.push_back(S.getSchool()[i]);
-}*/
-/*
-vector<School> School::split()
-{
-	vector<School> Singoletti;
-	for (int j = 0; j < school.size(); j++)
-		Singoletti.push_back(School(school[j]));
-	return Singoletti;
-}*/
-
-
-
-
 
 
 

@@ -125,20 +125,30 @@ int Frame::handle(int event) {
 int Frame::handle_mouse(int event, int button, int x, int y) {
     foo = new char[100];
     int ret = 0;
-    int spostamentox;
-    int spostamentoy;
     switch (button) {
     case 1: // LMB
         ret = 1;
         // Based on the action, print the action and
         // coordinates where it occurred.
         if (event == FL_PUSH) {
-            //inizializzo le posizioni in cui clicko
-
+            clickX = x;
+            clickY = y;
         }
         else if (event == FL_DRAG) {
             //
-            /**/
+            if (prevX > clickX)
+                glRotatef(-1, 0, 1, 0);
+            if (prevX < clickX)
+                glRotatef(1, 0, 1, 0);
+            prevX = clickX;
+            clickX = x;
+
+            if (prevY > clickY)
+                glRotatef(-1, 1, 0, 0);
+            if (prevY < clickY)
+                glRotatef(1, 1, 0, 0);
+            prevY = clickY;
+            clickY = y;
         }
         else if (event == FL_RELEASE) {
 

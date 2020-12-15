@@ -12,11 +12,7 @@
 #include "utilities.h"
 #include "Potenziali.h"
 
-/*extern float pos[10][3];
-extern float vel[10][3];
-extern Pesce p[10];
-extern School s[10];
-extern vector<School> pozza;*/
+
 //-------------------------------------------------------------------------------------------------
 void normale9f(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3)
 {
@@ -29,8 +25,34 @@ void normale9f(float x1, float y1, float z1, float x2, float y2, float z2, float
     glNormal3f(nx, ny, nz);
 }
 
-void DrawSchool(School& s)
-{
+
+void draw_direction(float x, float y, float z) {
+    glColor3f(1, 0, 0);
+    glLineWidth(2);
+    glBegin(GL_LINES);
+    glVertex3f(0, 0, 0); glVertex3f(x, y, z);
+    glEnd();
+}
+
+
+void rotateAxis(int *prevX, int *clickX, int *prevY, int *clickY, int x, int y) {
+    if (*prevX > *clickX)
+        glRotatef(-1, 0, 1, 0);
+    if (*prevX < *clickX)
+        glRotatef(1, 0, 1, 0);
+    *prevX = *clickX;
+    *clickX = x;
+
+    if (*prevY > *clickY)
+        glRotatef(-1, 1, 0, 0);
+    if (*prevY < *clickY)
+        glRotatef(1, 1, 0, 0);
+    *prevY = *clickY;
+    *clickY = y;
+}
+
+void DrawSchool()
+{   
     s.Nuota();
     vector<Pesce> p = s.getP();
     for (int i = 0; i < p.size(); i++)
@@ -43,11 +65,15 @@ void DrawSchool(School& s)
 
 }
 
-void DrawOcean(School& s)
+void DrawOcean()
 {
+    draw_direction(0, 0, 30);
+    draw_direction(0, 30, 0);
+    draw_direction(30, 0, 0);
+    s.Split();
     s.Merge();
     s.SetAccelerazioni();
-    DrawSchool(s);
+    DrawSchool();
 }
 // ********************************************************************************************************
 void initOcean() {
@@ -56,7 +82,7 @@ void initOcean() {
 
 
 void draw_scene(void) {
-    DrawOcean(s);
+    DrawOcean();
 
     // ********************************************************************************************************
     /*void draw_scene(void) {

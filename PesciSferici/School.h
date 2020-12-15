@@ -39,5 +39,6 @@ public:
 	vector<Pesce> getP() { return p; }
 	void Nuota();
 	void Merge();
+	void Split();
 	void SetAccelerazioni();
 };
