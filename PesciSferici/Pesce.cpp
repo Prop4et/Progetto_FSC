@@ -58,7 +58,9 @@ void Pesce::Nuota() {
         
         pos[k] += vel[k] * dt;
         vel[k] += acc[k] * dt;
-        acc[k] += -dt*pow(vel[k], 3) / (abs(vel[k]) + 0.0000001); //attrito viscoso
+        //if (vel[k]>0.001) acc[k] += -dt*vel[k]/abs(vel[k]); //attrito viscoso
+        if (vel[k]>0.001) acc[k] += -dt*pow(vel[k], 3) / (abs(vel[k]) + 0.0000001); //attrito 
+        //if (vel[k] > 0.001) acc[k] += -dt * pow(vel[k], 5) / (abs(vel[k]) + 0.0000001); //attrito viscoso
        // else  acc[k] += -vel[k] * dt;
     }
 

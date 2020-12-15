@@ -9,3 +9,4 @@
 #define VerticalDistance 3
 #define FISHNUMBER 3
 #define SCHOOLNUMBER 3
+#define asimmetry 0.2f
