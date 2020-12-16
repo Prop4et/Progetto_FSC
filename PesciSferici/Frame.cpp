@@ -17,8 +17,7 @@
 #define LIGHT
 
 extern void initOcean();
-extern void draw_scene();
-extern void setCamera(int schoolToWatch);
+extern void draw_scene(int schoolToWatch, int fishToWatch, int rotateX, int rotateY, int rotateZ);
 extern void stampa(const char* messaggio);
 char* foo;
 int flag = 0;
@@ -80,9 +79,8 @@ void Frame::draw() {
         glMatrixMode(GL_MODELVIEW);                            // Select The Modelview Matrix
         glLoadIdentity();                                      // Reset The Modelview Matrix
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);    // Clear The Screen And The Depth Buffer
-        glLoadIdentity();                                      // Reset The View
+        //glLoadIdentity();                                      // Reset The View
         //gluLookAt(0.0, 0.0, 60, 0, 0, 0, 0, 1, 0);        // Position - View  - Up Vector
-        //setCamera(-1);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
 
@@ -92,14 +90,9 @@ void Frame::draw() {
 
     //glClear(GL_DEPTH_BUFFER_BIT); 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    draw_scene();
+    draw_scene(-1, ruotaX, ruotaY, ruotaZ, 0);
 
-    /*    glPushMatrix();
-        glRotated(ruotaZ, 0, 0, 1);
-        glRotated(ruotaX, 1, 0, 0);
-        glRotated(ruotaY, 0, 1, 0);
-        glScalef(zoom, zoom, zoom);
-        glPopMatrix();*/
+        
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -140,10 +133,10 @@ int Frame::handle_mouse(int event, int button, int x, int y) {
         else if (event == FL_DRAG) {
 
             if (prevX > clickX) {
-                 glRotatef(-1, 0, 1, 0);
+                glRotatef(-1, 0, 1, 0);
             }
             if (prevX < clickX) {
-                 glRotatef(1, 0, 1, 0);
+                glRotatef(1, 0, 1, 0);
             }
             prevX = clickX;
             clickX = x;
