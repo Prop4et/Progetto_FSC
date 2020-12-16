@@ -12,6 +12,7 @@ void normale9f(float x1, float y1, float z1, float x2, float y2, float z2, float
 void draw_scene(int schoolToWatch, int fishToWatch, int rotateX, int rotateY, int rotateZ);
 void DrawOcean();
 void setCamera(int schoolToWatch, int fishToWatch, int rotateX, int rotateY, int rotateZ);
+int rx = 0, ry = 0, rz = 0;
 School s;
 
 //prova per potenziale repulsivo+attrattivo.

@@ -79,8 +79,8 @@ void Frame::draw() {
         glMatrixMode(GL_MODELVIEW);                            // Select The Modelview Matrix
         glLoadIdentity();                                      // Reset The Modelview Matrix
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);    // Clear The Screen And The Depth Buffer
-        //glLoadIdentity();                                      // Reset The View
-        //gluLookAt(0.0, 0.0, 60, 0, 0, 0, 0, 1, 0);        // Position - View  - Up Vector
+        glLoadIdentity();                                      // Reset The View
+        gluLookAt(0.0, 0.0, 60, 0, 0, 0, 0, 1, 0);        // Position - View  - Up Vector
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
 
@@ -90,7 +90,7 @@ void Frame::draw() {
 
     //glClear(GL_DEPTH_BUFFER_BIT); 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    draw_scene(-1, ruotaX, ruotaY, ruotaZ, 0);
+    draw_scene(-1, 0, ruotaX, ruotaY, ruotaZ);
 
         
 }

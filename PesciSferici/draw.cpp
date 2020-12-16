@@ -9,8 +9,7 @@
 
 #include "draw.h"
 #include "Frame.h"
-#include "utilities.h"
-#include "Potenziali.h"
+
 
 
 //-------------------------------------------------------------------------------------------------
@@ -41,11 +40,22 @@ void draw_direction(float x, float y, float z) {
 void setCamera(int schoolToWatch, int fishToWatch, int rotateX, int rotateY, int rotateZ) {
     //se non ho nessun parametro passato dall'input seguo il primo banco che si crea
     if (schoolToWatch == -1) {
-        glLoadIdentity();
-        gluLookAt(0.0, 0.0, 60, s.getP()[s.getSchool()[0].second].getPos()[0], s.getP()[s.getSchool()[0].second].getPos()[1], s.getP()[s.getSchool()[0].second].getPos()[2], 0, 1, 0);        // Position - View  - Up Vector
-        glRotatef(rotateX, 1, 0, 0);
-        glRotatef(rotateY, 0, 1, 0);
-        glRotatef(rotateZ, 0, 0, 1);
+        glTranslatef(s.getP()[s.getSchool()[0].second].getPos()[0], s.getP()[s.getSchool()[0].second].getPos()[1], s.getP()[s.getSchool()[0].second].getPos()[2]);
+        if (rx != rotateX) {
+            glRotatef(rotateX, 1, 0, 0);
+            rx = rotateX;
+        }
+        if(ry != rotateY) {
+            glRotatef(rotateY, 0, 1, 0);
+            ry = rotateY;
+        }
+        if (rz != rotateZ) {
+            glRotatef(rotateZ, 0, 0, 1);
+            rz = rotateZ;
+        }
+        glTranslatef(-s.getP()[s.getSchool()[0].second].getPos()[0], -s.getP()[s.getSchool()[0].second].getPos()[1], -s.getP()[s.getSchool()[0].second].getPos()[2]);
+        //glLoadIdentity();
+       // gluLookAt(0.0, 0.0, 60, s.getP()[s.getSchool()[0].second].getPos()[0], s.getP()[s.getSchool()[0].second].getPos()[1], s.getP()[s.getSchool()[0].second].getPos()[2], 0, 1, 0);
     }
 }
 
