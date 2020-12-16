@@ -9,3 +9,5 @@
 #define VerticalDistance 2
 #define FISHNUMBER 10
 #define SCHOOLNUMBER 10
+#define SCREEN_W 980
+#define SCREEN_H 980

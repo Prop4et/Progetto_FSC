@@ -18,6 +18,7 @@
 
 extern void initOcean();
 extern void draw_scene();
+extern void setCamera(int schoolToWatch);
 extern void stampa(const char* messaggio);
 char* foo;
 int flag = 0;
@@ -80,7 +81,8 @@ void Frame::draw() {
         glLoadIdentity();                                      // Reset The Modelview Matrix
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);    // Clear The Screen And The Depth Buffer
         glLoadIdentity();                                      // Reset The View
-        gluLookAt(0.0, 0.0, 60, 0, 0, 0, 0, 1, 0);        // Position - View  - Up Vector
+        //gluLookAt(0.0, 0.0, 60, 0, 0, 0, 0, 1, 0);        // Position - View  - Up Vector
+        //setCamera(-1);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
 
@@ -133,20 +135,24 @@ int Frame::handle_mouse(int event, int button, int x, int y) {
         if (event == FL_PUSH) {
             clickX = x;
             clickY = y;
+            std::cout << x << " " << y << "\n";
         }
         else if (event == FL_DRAG) {
-            //
-            if (prevX > clickX)
-                glRotatef(-1, 0, 1, 0);
-            if (prevX < clickX)
-                glRotatef(1, 0, 1, 0);
+
+            if (prevX > clickX) {
+                 glRotatef(-1, 0, 1, 0);
+            }
+            if (prevX < clickX) {
+                 glRotatef(1, 0, 1, 0);
+            }
             prevX = clickX;
             clickX = x;
-
-            if (prevY > clickY)
+            if (prevY > clickY) {
                 glRotatef(-1, 1, 0, 0);
-            if (prevY < clickY)
+            }
+            if (prevY < clickY) {
                 glRotatef(1, 1, 0, 0);
+            }
             prevY = clickY;
             clickY = y;
         }

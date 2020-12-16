@@ -7,11 +7,11 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
+#include "define.h"
 
 #define LIGHT 1
 #define SFERA 44
 #define BUCA 62
-
 
 class Frame : public Fl_Gl_Window {
 private:
@@ -22,10 +22,8 @@ private:
 public:
 	double ruotaX, ruotaY, ruotaZ, zoom;
 	double moveUp, moveSide, scale;
-	int clickX, clickY, prevX, prevY;
-	int prevx = 0;
-	int prevy = 0;
-	int  handle(int);
+	int clickX, clickY, prevX, prevY, rotationX, rotationY;
+	int handle(int);
 	Frame(int x, int y, int w, int h, const char* l = 0) : Fl_Gl_Window(x, y, w, h, l) {}
 };
 

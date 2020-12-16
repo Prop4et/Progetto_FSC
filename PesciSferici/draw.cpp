@@ -25,7 +25,6 @@ void normale9f(float x1, float y1, float z1, float x2, float y2, float z2, float
     glNormal3f(nx, ny, nz);
 }
 
-
 void draw_direction(float x, float y, float z) {
     glColor3f(1, 0, 0);
     glLineWidth(2);
@@ -34,7 +33,15 @@ void draw_direction(float x, float y, float z) {
     glEnd();
 }
 
+void setCamera(int schoolToWatch) {
+    //se non ho nessun parametro passato dall'input seguo il primo banco che si crea
+    if (schoolToWatch == -1) {
+        glLoadIdentity();
+        gluLookAt(0.0, 0.0, 60, s.getP()[s.getSchool()[0].second].getPos()[0], s.getP()[s.getSchool()[0].second].getPos()[1], s.getP()[s.getSchool()[0].second].getPos()[2], 0, 1, 0);        // Position - View  - Up Vector
+    }
+}
 
+/*
 void rotateAxis(int *prevX, int *clickX, int *prevY, int *clickY, int x, int y) {
     if (*prevX > *clickX)
         glRotatef(-1, 0, 1, 0);
@@ -50,9 +57,10 @@ void rotateAxis(int *prevX, int *clickX, int *prevY, int *clickY, int x, int y) 
     *prevY = *clickY;
     *clickY = y;
 }
-
+*/
 void DrawSchool()
 {   
+    setCamera(-1);
     s.Nuota();
     vector<Pesce> p = s.getP();
     for (int i = 0; i < p.size(); i++)
