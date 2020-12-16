@@ -22,7 +22,8 @@ private:
 public:
 	double ruotaX, ruotaY, ruotaZ, zoom;
 	double moveUp, moveSide, scale;
-	int clickX, clickY, prevX, prevY, rotationX, rotationY;
+	bool choiceS = false, choiceP = false;
+	int inputVal = -1;
 	int handle(int);
 	Frame(int x, int y, int w, int h, const char* l = 0) : Fl_Gl_Window(x, y, w, h, l) {}
 };

@@ -44,7 +44,7 @@ void School::addPesce()
 	int indexP = school.back().second;
 	//inserisco il pesce nel vector dei pesci e l'indice nel vector dei banchi
 	p.push_back(Pesce(pos, vel));
-	school.push_back(pair<int, int>(indexS+1, indexP));
+	school.push_back(pair<int, int>(indexS, indexP));
 }
 void School::Nuota() {
 	for (int i = 0; i < p.size(); i++) {
@@ -77,6 +77,8 @@ void School::Merge() {
 	}
 	sort(school.begin(), school.end());
 }
+
+
 void School::Split() {
 	int nSchool, nTimeDist;
 	int indexS, indexP, compIndexS, compIndexP;
@@ -96,12 +98,10 @@ void School::Split() {
 					compIndexP = school[j].second;
 					//se la distanza fra i due pesci
 					if (dist(p[indexP].getPos(), p[compIndexP].getPos()) > MinDist)
-						//assegno il minimo tra i due indici se i pesci fanno parte dello stesso banco
-						//la funzione minimo viene applicato perche' il vector non ha valori monotoni crescenti nel primo campo della coppia
-						//mentre nel secondo si'
 						nTimeDist++;
 				}
 			}
+			//scorro l'array per mettere il nuovo elemento che ho tirato fuori in fondo, cosi' da mantenere l'ordine
 			if (nTimeDist == nSchool) {
 				lastIndex++;
 				int appI = i;
@@ -164,21 +164,23 @@ void School::SetAccelerazioni()
 /*void School::setDir(float* arr) {
 	for (int i = 0; i < 3; i++) dir[i] = arr[i];
 }*/
-/*
-void School::computeAVGDir() {
-	int i = 0;
-	float avgcentro[3] = { 0,0,0 };
-	for (int j = 0; j < school.size(); j++) {
-		for (i = 0; i < 3; i++)
-			avgcentro[i] += school[j]->getPos()[i];
+
+void School::computeAVGDir(int index, float* centro) {
+	int dim = 0;
+	for (int i = 0; i < school.size(); i++) {
+		//cout << school[i].first;
+
+		if (school[i].first == index) {
+			for (int j = 0; j < DIMARR; j++)
+				centro[j] += p[school[i].second].getPos()[j];
+			dim++;
+ 		}
 	}
-	for (i = 0; i < 3; i++) {
-		avgcentro[i] = avgcentro[i] / school.size();
-		//printf("%f ", avgcentro[i]);
+	for (int j = 0; j < DIMARR; j++) {
+		centro[j] /= dim;
 	}
-	printf("\n");
 }
-*/
+
 //TODO: calcolare l'asse per centrare il banco di pesci
 //ossia calcolare la lunghezza del banco (EZ) e calcolare l'angolo della direzione media del banco (?)
 //come se calcola l'angolo, in base a cosa? Che poi in realtà sono due angoli, uno tra x,z e uno tra x,y o z,y dipende

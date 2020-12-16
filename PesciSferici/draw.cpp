@@ -37,20 +37,47 @@ void draw_direction(float x, float y, float z) {
     glEnd();
 }
 
-void setCamera(int schoolToWatch, int fishToWatch, int rotateX, int rotateY, int rotateZ) {
-    //se non ho nessun parametro passato dall'input seguo il primo banco che si crea
-    if (schoolToWatch == -1) {
-        glLoadIdentity();
-        gluLookAt(0.0, 0.0, 60, s.getP()[s.getSchool()[0].second].getPos()[0], s.getP()[s.getSchool()[0].second].getPos()[1], s.getP()[s.getSchool()[0].second].getPos()[2], 0, 1, 0);
-        glTranslatef(s.getP()[s.getSchool()[0].second].getPos()[0], s.getP()[s.getSchool()[0].second].getPos()[1], s.getP()[s.getSchool()[0].second].getPos()[2]);
-        glRotatef(rotateX, 1, 0, 0);
-        rx = rotateX;
-        glRotatef(rotateY, 0, 1, 0);
-        ry = rotateY;
-        glRotatef(rotateZ, 0, 0, 1);
-        rz = rotateZ;
-        glTranslatef(-s.getP()[s.getSchool()[0].second].getPos()[0], -s.getP()[s.getSchool()[0].second].getPos()[1], -s.getP()[s.getSchool()[0].second].getPos()[2]);
-       
+void moveEverything(int index, int rotateX, int rotateY, int rotateZ) {
+    //funziona per il pesce, per il banco no perche' devo calcolare il punto medio e seguire, appunto, il banco
+    glLoadIdentity();
+    gluLookAt(0.0, 0.0, 60, s.getP()[index].getPos()[0], s.getP()[index].getPos()[1], s.getP()[index].getPos()[2], 0, 1, 0);
+    glTranslatef(s.getP()[index].getPos()[0], s.getP()[index].getPos()[1], s.getP()[index].getPos()[2]);
+    glRotatef(rotateX, 1, 0, 0);
+    rx = rotateX;
+    glRotatef(rotateY, 0, 1, 0);
+    ry = rotateY;
+    glRotatef(rotateZ, 0, 0, 1);
+    rz = rotateZ;
+    glTranslatef(-s.getP()[index].getPos()[0], -s.getP()[index].getPos()[1], -s.getP()[index].getPos()[2]);
+}
+
+void moveEverything(float px, float py, float pz, int rotateX, int rotateY, int rotateZ) {
+    glLoadIdentity();
+    gluLookAt(0.0, 0.0, 60, px, py, pz, 0, 1, 0);
+    glTranslatef(px, py, pz);
+    glRotatef(rotateX, 1, 0, 0);
+    rx = rotateX;
+    glRotatef(rotateY, 0, 1, 0);
+    ry = rotateY;
+    glRotatef(rotateZ, 0, 0, 1);
+    rz = rotateZ;
+    glTranslatef(-px, -py, -pz);
+}
+
+void setCamera(int follow, bool isSchool, bool isFish, int rotateX, int rotateY, int rotateZ) {
+    if (follow != -1) {
+        if (isSchool) {
+            if (follow <= s.getSchool().back().first) {
+                //qua devo calcolare le coordinate 
+                float center[3] = { 0, 0, 0 };
+                s.computeAVGDir(follow, center);
+                moveEverything(center[0], center[1], center[2], rotateX, rotateY, rotateZ);
+            }
+        }
+        if (isFish) {
+            if (follow < s.getP().size())
+                moveEverything(follow, rotateX, rotateY, rotateZ);
+        }
     }
 }
 
@@ -88,8 +115,8 @@ void DrawSchool()
 
 void DrawOcean()
 {
-    s.Split();
     s.Merge();
+    s.Split();
     s.SetAccelerazioni();
     DrawSchool();
 }
@@ -99,19 +126,9 @@ void initOcean() {
 }
 
 
-void draw_scene(int schoolToWatch, int fishToWatch, int rotateX, int rotateY, int rotateZ) {
-    setCamera(schoolToWatch, fishToWatch, rotateX, rotateY, rotateZ);
+void draw_scene(int follow, bool isSchool, bool isFish, int rotateX, int rotateY, int rotateZ) {
+    setCamera(follow, isSchool, isFish, rotateX, rotateY, rotateZ);
     DrawOcean();
-
-    // ********************************************************************************************************
-    /*void draw_scene(void) {
-
-        draw_pesce();
-    */
     glColor3f(0.1, 1.0, 0.1);		// redish
-    //glFrontFace(GL_CW); 
-    //glutSolidTeapot(0.5);			// draw the teapot
-    //glutSolidTorus(1,2,30,30);			            // draw the torus
-    //glutSolidCylinder(1,2,30,20);			            // draw the cylinder
-
+    
 }

@@ -12,12 +12,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
+#include <vector>
 
 
 #define LIGHT
 
 extern void initOcean();
-extern void draw_scene(int schoolToWatch, int fishToWatch, int rotateX, int rotateY, int rotateZ);
+extern void draw_scene(int schoolToWatch, bool isSchool, bool isFish, int rotateX, int rotateY, int rotateZ);
 extern void stampa(const char* messaggio);
 char* foo;
 int flag = 0;
@@ -90,9 +91,7 @@ void Frame::draw() {
 
     //glClear(GL_DEPTH_BUFFER_BIT); 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    draw_scene(-1, 0, ruotaX, ruotaY, ruotaZ);
-
-        
+    draw_scene(inputVal, choiceS, choiceP, ruotaX, ruotaY, ruotaZ);       
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -125,33 +124,7 @@ int Frame::handle_mouse(int event, int button, int x, int y) {
         ret = 1;
         // Based on the action, print the action and
         // coordinates where it occurred.
-        if (event == FL_PUSH) {
-            clickX = x;
-            clickY = y;
-            std::cout << x << " " << y << "\n";
-        }
-        else if (event == FL_DRAG) {
-
-            if (prevX > clickX) {
-                glRotatef(-1, 0, 1, 0);
-            }
-            if (prevX < clickX) {
-                glRotatef(1, 0, 1, 0);
-            }
-            prevX = clickX;
-            clickX = x;
-            if (prevY > clickY) {
-                glRotatef(-1, 1, 0, 0);
-            }
-            if (prevY < clickY) {
-                glRotatef(1, 1, 0, 0);
-            }
-            prevY = clickY;
-            clickY = y;
-        }
-        else if (event == FL_RELEASE) {
-
-        }
+       
     case 3:
         ret = 1;
         // Based on the action, print the action and

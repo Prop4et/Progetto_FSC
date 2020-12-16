@@ -25,6 +25,7 @@ private:
 	vector<pair<int, int>> school;
 	//Pesce p[FISHNUMBER];
 	vector<Pesce> p;
+	//se ho il tutto fatto cosi' o mi faccio un vector di tutto oppure calcolo on the fly, vediamo, per ora e' on the fly
 	float dir[3] = { 0,0,0 };
 	float dimensions[3] = { 0,0,0 }; //dimensioni del banco (lunghezza, larghezza, altezza, modellato come un cilindro
 	float max[3] = { 0, 0, 0 };
@@ -41,4 +42,5 @@ public:
 	void Merge();
 	void Split();
 	void SetAccelerazioni();
+	void computeAVGDir(int i, float* centro);
 };
