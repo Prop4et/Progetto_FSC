@@ -40,22 +40,17 @@ void draw_direction(float x, float y, float z) {
 void setCamera(int schoolToWatch, int fishToWatch, int rotateX, int rotateY, int rotateZ) {
     //se non ho nessun parametro passato dall'input seguo il primo banco che si crea
     if (schoolToWatch == -1) {
+        glLoadIdentity();
+        gluLookAt(0.0, 0.0, 60, s.getP()[s.getSchool()[0].second].getPos()[0], s.getP()[s.getSchool()[0].second].getPos()[1], s.getP()[s.getSchool()[0].second].getPos()[2], 0, 1, 0);
         glTranslatef(s.getP()[s.getSchool()[0].second].getPos()[0], s.getP()[s.getSchool()[0].second].getPos()[1], s.getP()[s.getSchool()[0].second].getPos()[2]);
-        if (rx != rotateX) {
-            glRotatef(rotateX, 1, 0, 0);
-            rx = rotateX;
-        }
-        if(ry != rotateY) {
-            glRotatef(rotateY, 0, 1, 0);
-            ry = rotateY;
-        }
-        if (rz != rotateZ) {
-            glRotatef(rotateZ, 0, 0, 1);
-            rz = rotateZ;
-        }
+        glRotatef(rotateX, 1, 0, 0);
+        rx = rotateX;
+        glRotatef(rotateY, 0, 1, 0);
+        ry = rotateY;
+        glRotatef(rotateZ, 0, 0, 1);
+        rz = rotateZ;
         glTranslatef(-s.getP()[s.getSchool()[0].second].getPos()[0], -s.getP()[s.getSchool()[0].second].getPos()[1], -s.getP()[s.getSchool()[0].second].getPos()[2]);
-        //glLoadIdentity();
-       // gluLookAt(0.0, 0.0, 60, s.getP()[s.getSchool()[0].second].getPos()[0], s.getP()[s.getSchool()[0].second].getPos()[1], s.getP()[s.getSchool()[0].second].getPos()[2], 0, 1, 0);
+       
     }
 }
 
@@ -93,9 +88,6 @@ void DrawSchool()
 
 void DrawOcean()
 {
-    draw_direction(0, 0, 30);
-    draw_direction(0, 30, 0);
-    draw_direction(30, 0, 0);
     s.Split();
     s.Merge();
     s.SetAccelerazioni();
