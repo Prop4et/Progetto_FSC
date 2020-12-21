@@ -144,6 +144,11 @@ void AttractiveForcesHole(float* PosFish, float* PosHole, float* arr) //interazi
 	//return Forzexyz;
 }
 
+float AttractivePotenzialHole(float* PosFish, float* PosHole)
+{
+	float r = dist(PosFish, PosHole);
+		return -expf(-(r * r) / (2 * DIM_BUCA * DIM_BUCA));
+}
 
 //##########################
 //Forze repulsive per pesci (overload)
@@ -322,6 +327,31 @@ float* AllForcesFish(Pesce FishGen, Pesce FishSub)
 	return 0;
 }
 
+void omegaPunto(Pesce PesceDavanti, Pesce PesceDietro, float* arr)
+{
+	arr[0] = PesceDietro.getVel()[1] * PesceDavanti.getVel()[2] - PesceDavanti.getVel()[1] * PesceDietro.getVel()[2];
+	arr[1] = PesceDietro.getVel()[2] * PesceDavanti.getVel()[0] - PesceDavanti.getVel()[2] * PesceDietro.getVel()[0];
+	arr[2] = PesceDietro.getVel()[0] * PesceDavanti.getVel()[1] - PesceDavanti.getVel()[0] * PesceDietro.getVel()[1];
+	float temporaneo = 0;
+	temporaneo = AttractivePotenzialHole(PesceDietro.getPos(), PesceDavanti.getHoles()[0].getPos()) +
+		AttractivePotenzialHole(PesceDietro.getPos(), PesceDavanti.getHoles()[1].getPos()) +
+		AttractivePotenzialHole(PesceDietro.getPos(), PesceDavanti.getHoles()[4].getPos()) +
+		AttractivePotenzialHole(PesceDietro.getPos(), PesceDavanti.getHoles()[5].getPos());
+	for (int i = 0; i < 3; i++) arr[i] = arr[i] * temporaneo;
+}
+
+void omegaPuntoJack(Pesce Davanti, Pesce Dietro, float* arr)
+{
+	ProdottoVettoriale(Dietro.getVel(), Davanti.getVel(), arr);
+	float temporaneo = 0;
+	temporaneo = AttractivePotenzialHole(Dietro.getPos(), Davanti.getHoles()[0].getPos()) +
+		AttractivePotenzialHole(Dietro.getPos(), Davanti.getHoles()[1].getPos()) +
+		AttractivePotenzialHole(Dietro.getPos(), Davanti.getHoles()[4].getPos()) +
+		AttractivePotenzialHole(Dietro.getPos(), Davanti.getHoles()[5].getPos());
+	for (int i = 0; i < 3; i++) arr[i] = arr[i] * temporaneo;
+}
+
+
 int Weight(vector<School>& Oceano)
 {
 	int peso = 0;
@@ -340,7 +370,7 @@ void SetAccelerazioni(vector<School>& Oceano)
 		{
 			Pesce* Fish = Oceano[a].getSchool()[b];
 			float accTot[3] = { 0.f, 0.f, 0.f };
-			float forza[3];
+			float forza[3], OmegaPunto[3]{ 0,0,0 }, OmegaPuntoVero[3]{ 0,0,0 };
 			vector<int> PerceivedSchools;
 			//trova i banchi visti dal pesce
 			for (int i = 0; i < Oceano.size(); i++)
@@ -364,27 +394,33 @@ void SetAccelerazioni(vector<School>& Oceano)
 				//consideriamo i potenziali repulsivi dei pesci vicini del banco corrente
 				for (int j = 0; j < Oceano[PerceivedSchools[i]].getSchool().size(); j++)
 					if (a != PerceivedSchools[i] || b != j)
+					
+				
 						if (dist(Fish->getPos(), Oceano[PerceivedSchools[i]].getSchool()[j]->getPos()) < MinDist) //sente solo le repulsioni dei pesci vicini, per risparmiare conti
 						{
-						RepulsiveForcesFish(*Oceano[PerceivedSchools[i]].getSchool()[j], *Fish, forza);
-						for (int u = 0; u < 3; u++)
-							accTot[u] += forza[u] / massa;
-
-
+							/*	omegaPuntoJack(*Oceano[PerceivedSchools[i]].getSchool()[j], *Fish, OmegaPunto);
+					for (int u=0; u<3; u++)
+					OmegaPuntoVero[u] += OmegaPunto[u];*/
+							RepulsiveForcesFish(*Oceano[PerceivedSchools[i]].getSchool()[j], *Fish, forza);
+							for (int u = 0; u < 3; u++)
+							{
+								accTot[u] += forza[u] / massa;
+							}
 							//potenziali buche
 							for (int h = 0; h < 8; h++)
 							{
 								float* PosHole = Oceano[PerceivedSchools[i]].getSchool()[j]->getHoles()[h].getPos();
 
 								AttractiveForcesHole(Fish->getPos(), PosHole, forza);
-								for (int u = 0; u < 3; u++) 
+								for (int u = 0; u < 3; u++)
 									accTot[u] += forza[u] / massa;
-								
+
 							}
 						}
-
+					
 			}
 
 			Fish->setAcc(accTot);
+			Fish->setOmegaPunto(OmegaPuntoVero);
 		}
 }

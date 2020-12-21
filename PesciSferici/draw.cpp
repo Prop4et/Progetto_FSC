@@ -93,6 +93,12 @@ void initOcean2() {
 
 
 void draw_scene(void) {
+ /*   if (init==false)
+    {
+        initOcean2();
+        init = true;
+    }
+ */   
     DrawOcean(pozza);
 
 
