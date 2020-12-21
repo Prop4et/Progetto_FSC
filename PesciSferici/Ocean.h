@@ -7,6 +7,8 @@
 #include "Pesce.h"
 #include "utilities.h"
 #include "Potenziali.h"
+#include "School.h"
+#include <list>
 /*Class: School
 * Description: classe che descrive un banco di pesci
 * cambiamo cose, mettiamo una coppia nel vector con -1 nel campo del banco per i pesci che muoiono nel primo campo della coppia
@@ -20,24 +22,20 @@
 *	getShoal: restituisce il vector contenente tutti i pesci del banco
 *	computeAVGDir: calcola la direzione "media" del banco dei pesci (per ora coordinate cartesiane)
 */
-class School {
+class Ocean {
 private:
-	vector<pair<int, int>> school;
-	//vector<S
+	vector<pair<int, int>> ocean;
+	list<School> s;
+	list<School>::iterator itS;
 	vector<Pesce> p; 
 	//se ho il tutto fatto cosi' o mi faccio un vector di tutto oppure calcolo on the fly, vediamo, per ora e' on the fly
-	float dir[3] = { 0,0,0 };
-	float dimensions[3] = { 0,0,0 }; //dimensioni del banco (lunghezza, larghezza, altezza, modellato come un cilindro
-	float max[3] = { 0, 0, 0 };
-	float min[3] = { 0, 0, 0 };
-	float centro[3] = { 0, 0, 0 }; //fulcro attorno al quale i pesci si stringono in presenza di un predatore
-	float theta = 0; //angolo rispetto senza z
 public:
-	School();
-	void setDir(float* arr);
+	Ocean();
+	//void setDir(float* arr);
 	void addPesce();
-	vector<pair<int, int>> getSchool() { return school; }
+	vector<pair<int, int>> getOcean() { return ocean; }
 	vector<Pesce> getP() { return p; }
+	list<School> getS() { return s; }
 	void Nuota();
 	void Merge();
 	void Split();

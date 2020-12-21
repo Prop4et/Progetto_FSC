@@ -7,9 +7,13 @@ using namespace std;
 float asimmetry = 0.2f; //fattore di asimettria banco
 
 //##########################
-//Funzioni e attributi generali
+//Holes
 
-
+float AttractivePotenzialHole(float* PosFish, float* PosHole)
+{
+	float r = dist(PosFish, PosHole);
+	return -expf(-(r * r) / (2 * DIM_BUCA * DIM_BUCA));
+}
 
 
 
@@ -242,4 +246,17 @@ bool seenSchools(vector<pair<int, int>> s, vector<Pesce> p, vector<int>& ps, int
 			}
 		}
 	}
+}
+
+void omegaPunto(Pesce PesceDavanti, Pesce PesceDietro, float* arr)
+{
+	arr[0] = PesceDietro.getVel()[1] * PesceDavanti.getVel()[2] - PesceDavanti.getVel()[1] * PesceDietro.getVel()[2];
+	arr[1] = PesceDietro.getVel()[2] * PesceDavanti.getVel()[0] - PesceDavanti.getVel()[2] * PesceDietro.getVel()[0];
+	arr[2] = PesceDietro.getVel()[0] * PesceDavanti.getVel()[1] - PesceDavanti.getVel()[0] * PesceDietro.getVel()[1];
+	float temporaneo = 0;
+	temporaneo = AttractivePotenzialHole(PesceDietro.getPos(), PesceDavanti.getHoles()[0].getPos()) +
+		AttractivePotenzialHole(PesceDietro.getPos(), PesceDavanti.getHoles()[1].getPos()) +
+		AttractivePotenzialHole(PesceDietro.getPos(), PesceDavanti.getHoles()[4].getPos()) +
+		AttractivePotenzialHole(PesceDietro.getPos(), PesceDavanti.getHoles()[5].getPos());
+	for (int i = 0; i < 3; i++) arr[i] = arr[i] * temporaneo;
 }

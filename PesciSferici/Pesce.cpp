@@ -56,6 +56,7 @@ void Pesce::Nuota() {
     //incremento della posizione e della velocità del pesce
     for (int k = 0; k < DIMARR; ++k)
     {
+        omega[k] += omegapunto[k] * dt;
         if (v > 5) acc[k] += -pow(vel[k], 3) / (abs(vel[k]) + 0.0000001); //attrito viscoso
         pos[k] += vel[k] * dt;
         vel[k] += acc[k] * dt;
@@ -71,19 +72,49 @@ void Pesce::Nuota() {
         glCallList(BUCA);
         glPopMatrix();
     }
-}
-
-void Pesce::NuotainCerchio(float& t, int i) {
-    //i=0->ruta su piano xz i=1->ruota su piano xy, altri valori->bohhh
-    acc[0] = -10 * cos(t);
-    acc[1] = -10 * sin(t) * i;
-    acc[2] = 10 * sin(t) * (i - 1);
-    Nuota();
-    t += dt;
-
+    Rotazione(vel, omega);
 }
 
 
 float Pesce::computeTheta() {
     return atan2f(vel[1], vel[0]) * (180 / M_PI);
 }
+
+void Pesce::Rotazione(float* v, float* omega)
+{
+    float result[3];
+    //costruiamo la matrice di rotazione
+    float R[3][3];
+    int sgn = -1;
+    float theta = modul3(omega);
+    float u[3];
+    if (modul3(omega) < 0.00001)
+    {
+        theta = 1;
+    }
+    for (int y = 0; y < 3; y++) u[y] = omega[y] / theta;
+    theta *= dt;
+    for (int i = 0; i < 3; i++) //riga i-esima
+        for (int j = 0; j < 3; j++) //colonna j-esima
+        {
+            if (i == j)
+                R[i][j] = cos(theta) + u[j] * u[j] * (1 - cos(theta));
+            else
+            {
+                R[i][j] = u[i] * u[j] * (1 - cos(theta)) + sgn * u[3 - i - j] * sin(theta);
+                if (j != 2) sgn *= -1;
+            }
+        }
+    //matrice costruita ora ruotiamo il vettore
+    for (int i = 0; i < 3; i++)
+        result[i] = ProdottoScalare3(R[i], v);
+    for (int i = 0; i < 3; i++)
+        v[i] = result[i];
+}
+/*
+void Pesce::computePol()
+{
+    for (int i = 0; i < 3; i++)
+        omega[i] += omegapunto[i] * dt;
+    Rotazione(vel, omega);
+}*/

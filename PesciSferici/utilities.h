@@ -9,7 +9,6 @@
 #include <time.h>
 #include <vector>
 #include <math.h>
-#include "School.h"
 
 
 float dist(float* pos1, float* pos2);

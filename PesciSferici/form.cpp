@@ -9,7 +9,7 @@
 #include <FL/Fl_Gl_Window.H>
 #include <FL/Fl_Multiline_Output.H>
 #include <FL/Fl_Round_Button.H>
-#include <FL/Fl_Input.H>
+#include <FL/Fl_Int_Input.H>
 #include <FL/FL_ask.H>
 #include <FL/Fl_Choice.H>
 #include <FL/Fl_Menu_Item.H>
@@ -29,7 +29,7 @@ Fl_Button* button, *sendVal;
 Fl_Value_Slider* ruotaX, * ruotaY, * ruotaZ, * zoom;
 Fl_Group* radios;
 Fl_Round_Button* choiceS, *choiceP;
-Fl_Input* inputBox;
+Fl_Int_Input* inputBox;
 
 
 Fl_Multiline_Output* linee;
@@ -48,21 +48,23 @@ void zoom_callback(Fl_Widget*) { scene->zoom = zoom->value(); }
 void choiceS_callback(Fl_Widget*) {
     scene->choiceP = false;
     scene->choiceS = true;
+    scene->inputVal = -1;
 }
 void choiceP_callback(Fl_Widget*) {
     scene->choiceS = false;
     scene->choiceP = true;
+    scene->inputVal = -1;
 }
 void button_callback(Fl_Widget*) {
 }
 
 void sendVal_callback(Fl_Widget*) {
     if (scene->choiceS || scene->choiceP) {
-        ruotaX->show();
-        ruotaY->show();
-        ruotaZ->show();
         try {
-            scene->inputVal = std::stoi(inputBox->value());;
+            scene->inputVal = std::stoi(inputBox->value());
+            ruotaX->show();
+            ruotaY->show();
+            ruotaZ->show();
         }
         catch (std::invalid_argument& const) {
             fl_alert("il valore inserito non e' un intero");
@@ -100,7 +102,7 @@ void CreateMyWindow(void) {
     ruotaZ = new Fl_Value_Slider(w_est - 210, 20 + 3 * 50, 210, 20, "Ruota Z");
     choiceS = new Fl_Round_Button(w_est - 210, 20 + 4 * 50, 20, 20, "Segui banco");
     choiceP = new Fl_Round_Button(w_est - 210, 10 + 5 * 50, 20, 20, "Segui pesce");
-    inputBox = new Fl_Input(w_est - 150, 10 + 6 * 50, 40, 20, "numero");
+    inputBox = new Fl_Int_Input(w_est - 150, 10 + 6 * 50, 40, 20, "numero");
     sendVal = new Fl_Button(SCREEN_W + 130 , 10 + 6 * 50, 50, 20, "invia");
 
 
@@ -127,7 +129,7 @@ void CreateMyWindow(void) {
     choiceS->callback(choiceS_callback);
     choiceP->callback(choiceP_callback);
     sendVal->callback(sendVal_callback);
-    inputBox->callback(sendVal_callback);
+    //inputBox->callback(sendVal_callback);
 
     button->callback(button_callback);
     /*

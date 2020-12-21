@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "define.h"
+#include "utilities.h"
 
 
 #pragma once
@@ -34,6 +35,8 @@ private:
 	float vel[DIMARR];
 	float acc[DIMARR];
 	Hole holes[8];
+	float omega[DIMARR]{ 0,0,0 };
+	float omegapunto[DIMARR]{ 0,0,0 };
 	float theta;
 public:
 	Pesce();
@@ -48,7 +51,8 @@ public:
 	float* getAcc() { return acc; }
 	Hole* getHoles() { return holes; }
 	float getTheta() { return theta; }
+	void Rotazione(float* v, float* omega);
 	void Nuota();
-	void NuotainCerchio(float& t, int i);
 	float computeTheta();
+	//void computePol();
 };

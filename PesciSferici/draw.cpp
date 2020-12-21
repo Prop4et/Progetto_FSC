@@ -37,7 +37,7 @@ void draw_direction(float x, float y, float z) {
     glEnd();
 }
 
-void moveEverything(int index, int rotateX, int rotateY, int rotateZ) {
+/*void moveEverything(int index, int rotateX, int rotateY, int rotateZ) {
     //funziona per il pesce, per il banco no perche' devo calcolare il punto medio e seguire, appunto, il banco
     glLoadIdentity();
     gluLookAt(0.0, 0.0, 60, s.getP()[index].getPos()[0], s.getP()[index].getPos()[1], s.getP()[index].getPos()[2], 0, 1, 0);
@@ -49,7 +49,7 @@ void moveEverything(int index, int rotateX, int rotateY, int rotateZ) {
     glRotatef(rotateZ, 0, 0, 1);
     rz = rotateZ;
     glTranslatef(-s.getP()[index].getPos()[0], -s.getP()[index].getPos()[1], -s.getP()[index].getPos()[2]);
-}
+}*/
 
 void moveEverything(float px, float py, float pz, int rotateX, int rotateY, int rotateZ) {
     glLoadIdentity();
@@ -64,19 +64,27 @@ void moveEverything(float px, float py, float pz, int rotateX, int rotateY, int 
     glTranslatef(-px, -py, -pz);
 }
 
+//se passo follow per indirizzo lo modifico qua dentro e poi voglio vede se non segui quello che devi seguire
 void setCamera(int follow, bool isSchool, bool isFish, int rotateX, int rotateY, int rotateZ) {
     if (follow != -1) {
         if (isSchool) {
-            if (follow <= s.getSchool().back().first) {
+            if (follow <= o.getOcean().back().first) {
                 //qua devo calcolare le coordinate 
-                float center[3] = { 0, 0, 0 };
-                s.computeAVGDir(follow, center);
-                moveEverything(center[0], center[1], center[2], rotateX, rotateY, rotateZ);
+                //float center[3] = { 0, 0, 0 };
+                //o.computeAVGDir(follow, center);
+                list<School>::iterator itS = o.getS().begin();
+                advance(itS, follow);
+                //moveEverything(center[0], center[1], center[2], rotateX, rotateY, rotateZ);
+                moveEverything((*itS).getCenter()[0], (*itS).getCenter()[1], (*itS).getCenter()[2], rotateX, rotateY, rotateZ);
+
             }
+            else follow = o.getOcean().back().first;
         }
         if (isFish) {
-            if (follow < s.getP().size())
-                moveEverything(follow, rotateX, rotateY, rotateZ);
+            if (follow < o.getP().size())
+                moveEverything(o.getP()[follow].getPos()[0], o.getP()[follow].getPos()[1], o.getP()[follow].getPos()[2], rotateX, rotateY, rotateZ);
+            else
+                cout << "Fish out of bound\n";
         }
     }
 }
@@ -100,9 +108,7 @@ void rotateAxis(int *prevX, int *clickX, int *prevY, int *clickY, int x, int y) 
 */
 void DrawSchool()
 {   
-    
-    s.Nuota();
-    vector<Pesce> p = s.getP();
+    vector<Pesce> p = o.getP();
     for (int i = 0; i < p.size(); i++)
     {
         glPushMatrix();
@@ -110,25 +116,27 @@ void DrawSchool()
         glCallList(SFERA);
         glPopMatrix();
     }
-
 }
 
 void DrawOcean()
 {
-    s.Merge();
-    s.Split();
-    s.SetAccelerazioni();
     DrawSchool();
+    o.Merge();
+    o.Split();
+    o.SetAccelerazioni();
+    o.Nuota();
 }
 // ********************************************************************************************************
 void initOcean() {
-    s = School();
+    o = Ocean();
 }
 
 
 void draw_scene(int follow, bool isSchool, bool isFish, int rotateX, int rotateY, int rotateZ) {
     setCamera(follow, isSchool, isFish, rotateX, rotateY, rotateZ);
+
     DrawOcean();
+   
     glColor3f(0.1, 1.0, 0.1);		// redish
     
 }

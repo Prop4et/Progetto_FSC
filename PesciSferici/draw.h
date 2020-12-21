@@ -3,7 +3,7 @@
 #include <FL/glu.h>
 #include <GL/glut.h>	  
 #include <math.h>
-#include "School.h"
+#include "Ocean.h"
 #include "define.h"
 #include "Frame.h"
 
@@ -13,7 +13,7 @@ void draw_scene(int follow, bool isSchool, bool isFish, int rotateX, int rotateY
 void DrawOcean();
 void setCamera(int follow, bool isSchool, bool isFish, int rotateX, int rotateY, int rotateZ);
 int rx = 0, ry = 0, rz = 0;
-School s;
+Ocean o;
 
 //prova per potenziale repulsivo+attrattivo.
 

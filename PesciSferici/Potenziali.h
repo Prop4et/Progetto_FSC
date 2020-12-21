@@ -12,3 +12,5 @@ void AttractiveForcesSchool(vector<pair<int, int>> s, vector<Pesce> p, int index
 void RepulsiveForcesFish(Pesce PesceGen, Pesce PesceSub, float* arr);
 void RepulsiveForcesFish(float* PosFish1, float* PosFish2, float* arr);
 void AttractiveForcesHole(float* PosFish, float* PosHole, float* arr);
+void omegaPunto(Pesce PesceDavanti, Pesce PesceDietro, float* arr);
+float AttractivePotenzialHole(float* PosFish, float* PosHole);
