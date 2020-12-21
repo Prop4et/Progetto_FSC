@@ -66,11 +66,11 @@ void Pesce::Nuota() {
     for (int i = 0; i < 8; i++)
     {
         holes[i].AggiornaBuca(pos, vel);
-        glColor3f(holes[i].getCol()[0], holes[i].getCol()[1], holes[i].getCol()[2]);
-        glPushMatrix();
-        glTranslated(holes[i].getPos()[0], holes[i].getPos()[1], holes[i].getPos()[2]);
-        glCallList(BUCA);
-        glPopMatrix();
+   //     glColor3f(holes[i].getCol()[0], holes[i].getCol()[1], holes[i].getCol()[2]);
+     //   glPushMatrix();
+       // glTranslated(holes[i].getPos()[0], holes[i].getPos()[1], holes[i].getPos()[2]);
+        //glCallList(BUCA);
+        //glPopMatrix();
     }
     Rotazione(vel, omega);
 }

@@ -213,23 +213,7 @@ void AttractiveForcesSchool(vector<pair<int, int>> s, vector<Pesce> p, int index
 	AttractiveForcesSchool(AvgPosSchool, AvgVelSchool, p[indexP].getPos(), r, arr, 3);
 }
 
-int WeightTot(vector<pair<int, int>> school) {
-	int pesoTot = 0;
-	for (int i = 0; i < school.size(); i++)
-		if (school[i].first != -1)
-			pesoTot++;
-	return pesoTot;
-}
-int Weight(vector<pair<int, int>> school, int indexS)
-{
-	int peso = 0;
-	for (int i = 0; i < school.size(); i++) 
-		if (indexS == school[i].first)
-			peso++;
-	return peso;
-}
-
-bool seenSchools(vector<pair<int, int>> s, vector<Pesce> p, vector<int>& ps, int pesce) {
+void seenSchools(vector<pair<int, int>> s, vector<Pesce> p, vector<int>& ps, int pesce) {
 	int indexS, indexP, compIndexS, compIndexP;
 	indexS = indexP = compIndexS = compIndexP = -1;
 	ps.clear();
@@ -246,6 +230,23 @@ bool seenSchools(vector<pair<int, int>> s, vector<Pesce> p, vector<int>& ps, int
 			}
 		}
 	}
+}
+
+
+int WeightTot(vector<pair<int, int>>& school) {
+	int pesoTot = 0;
+	for (int i = 0; i < school.size(); i++)
+		if (school[i].first != -1)
+			pesoTot++;
+	return pesoTot;
+}
+int Weight(vector<pair<int, int>>& school, int indexS)
+{
+	int peso = 0;
+	for (int i = 0; i < school.size(); i++) 
+		if (indexS == school[i].first)
+			peso++;
+	return peso;
 }
 
 void omegaPunto(Pesce PesceDavanti, Pesce PesceDietro, float* arr)

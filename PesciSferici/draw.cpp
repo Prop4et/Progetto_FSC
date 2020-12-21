@@ -6,12 +6,20 @@
 #include <GL/glut.h>	  
 #include <math.h>
 #include <thread>
+#include <thread>
+#include <queue>
+#include <mutex>
+#include <condition_variable>
+#include <deque>
 
 #include "draw.h"
 #include "Frame.h"
-
-
-
+/*
+extern std::queue<vector<float*>> Q;
+extern std::condition_variable canPop;
+extern std::condition_variable canPush;
+extern std::mutex mPop;
+*/
 //-------------------------------------------------------------------------------------------------
 void normale9f(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3)
 {
@@ -70,15 +78,14 @@ void setCamera(int follow, bool isSchool, bool isFish, int rotateX, int rotateY,
         if (isSchool) {
             if (follow <= o.getOcean().back().first) {
                 //qua devo calcolare le coordinate 
-                //float center[3] = { 0, 0, 0 };
-                //o.computeAVGDir(follow, center);
-                list<School>::iterator itS = o.getS().begin();
-                advance(itS, follow);
-                //moveEverything(center[0], center[1], center[2], rotateX, rotateY, rotateZ);
-                moveEverything((*itS).getCenter()[0], (*itS).getCenter()[1], (*itS).getCenter()[2], rotateX, rotateY, rotateZ);
-
+                float center[3] = { 0, 0, 0 };
+                o.computeAVGDir(follow, center);
+                //list<School>::iterator itS = o.getS().begin();
+                //advance(itS, follow);
+                moveEverything(center[0], center[1], center[2], rotateX, rotateY, rotateZ);
+                //moveEverything((*itS).getCenter()[0], (*itS).getCenter()[1], (*itS).getCenter()[2], rotateX, rotateY, rotateZ);
             }
-            else follow = o.getOcean().back().first;
+            else cout << "madonnu\n";
         }
         if (isFish) {
             if (follow < o.getP().size())
@@ -108,31 +115,45 @@ void rotateAxis(int *prevX, int *clickX, int *prevY, int *clickY, int x, int y) 
 */
 void DrawSchool()
 {   
-    vector<Pesce> p = o.getP();
-    for (int i = 0; i < p.size(); i++)
+    for (int i = 0; i < o.getP().size(); i++)
     {
         glPushMatrix();
-        glTranslated(p[i].getPos()[0], p[i].getPos()[1], p[i].getPos()[2]);
+        glTranslated(o.getP()[i].getPos()[0], o.getP()[i].getPos()[1], o.getP()[i].getPos()[2]);
         glCallList(SFERA);
         glPopMatrix();
     }
 }
 
+void drawSchool(vector<float*> pos) {
+    glPushMatrix();
+    for (int i = 0; i < pos.size(); i++) {
+        glTranslated(pos[i][0], pos[i][1], pos[i][2]);
+        glCallList(SFERA);
+    }
+    glPopMatrix();
+}
+
 void DrawOcean()
 {
     DrawSchool();
-    /*o.Merge();
+    o.Merge();
     o.Split();
     o.SetAccelerazioni();
-    o.Nuota();*/
+    o.Nuota();
 }
 // ********************************************************************************************************
 void initOcean() {
-    o = Ocean();
+    Ocean o = Ocean();
 }
 
 
 void draw_scene(int follow, bool isSchool, bool isFish, int rotateX, int rotateY, int rotateZ) {
+
+    //std::unique_lock<std::mutex> lock(mPop);
+    //while (Q.empty()) canPop.wait(lock);
+    //drawSchool(Q.front());
+    //Q.pop();
+    //canPush.notify_one();
     setCamera(follow, isSchool, isFish, rotateX, rotateY, rotateZ);
 
     DrawOcean();

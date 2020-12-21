@@ -58,8 +58,8 @@ void Ocean::addPesce()
 	srand(time(NULL));
 	vx = rand() % 10;
 	vy = rand() % 10;
-	vel[0] = vx;
-	vel[1] = vy;
+	vel[0] = 0;
+	vel[1] = 0;
 	vel[2] = 0;
 	//estraggo l'ultimo index dei banchi e l'ultimo index dei pesci (in realta' cosi' facendo posso mettere un numeero di pesci pari a MAXINT)
 	int indexS = ocean.back().first;
@@ -70,17 +70,19 @@ void Ocean::addPesce()
 }
 void Ocean::Nuota() {
 	itS = s.begin();
-	int indexS = 0;
-	int nElem = 0;
+	int i = 0;
 	float avgVel[3] = { 0, 0, 0 };
 	float avgPos[3] = { 0, 0, 0 };
 	//calcolo tutte le varie cose dei vari banchi
-	for (int i = 0; i < ocean.size(); i++) {
+	while (i < ocean.size() && ocean[i].first == -1)
+		i++;
+	int indexS = ocean[i].second;
+	int nElem = 0;
+	while (i < ocean.size()) {
 		if (ocean[i].first == indexS) {
-			//add positions and all the parameters together
 			for (int j = 0; j < 3; j++) {
-				avgVel[j] += p[ocean[i].second].getVel()[j];
-				avgPos[j] += p[ocean[i].second].getPos()[j];
+				avgVel[j] += p[indexS].getVel()[j];
+				avgPos[j] += p[indexS].getPos()[j];
 			}
 			nElem++;
 		}
@@ -91,15 +93,23 @@ void Ocean::Nuota() {
 			}
 			(*itS).setCenter(avgPos);
 			(*itS).setVel(avgVel);
-			indexS = ocean[i].first;
 			itS++;
-			nElem = 0;
-			i--;
-			//divide for the number of elements added and pass it to the right element of the list
-			//then go to the next element indicating the right index of schools
-			//increment the iterator for the school list
+			for (int j = 0; j < 3; j++) {
+				avgPos[j] = 0;
+				avgVel[j] = 0;
+			}
+			nElem = 1;
+			indexS = ocean[i].first;
 		}
+		i++;
 	}
+	for (int j = 0; j < 3; j++) {
+		avgPos[j] /= nElem;
+		avgVel[j] /= nElem;
+	}
+	cout << "\n";
+	(*itS).setCenter(avgPos);
+	(*itS).setVel(avgVel);
 	//faccio nuotare tutti i pesci
 	//poi idealmente dentro nuota passo la "direttrice" della direzione del banco e poi i pesci calcolano l'angolo di rotazione in base a quella 
 	for (int i = 0; i < ocean.size(); i++) {
@@ -138,29 +148,31 @@ void Ocean::Merge() {
 
 
 void Ocean::Split() {
-	int nSchool, nTimeDist;
 	int indexS, indexP, compIndexS, compIndexP;
 	int lastIndex = ocean.back().first;
 	indexS = indexP = compIndexS = compIndexP = -1;
-	for (int i = 0; i < ocean.size() - 1; i++) {
+	for (int i = 0; i < ocean.size(); i++) {
 		//estraggo l'indice del banco di cui fa parte il pesce
 		indexS = ocean[i].first;
+		bool split = true;
 		if (indexS != -1) {
 			//estraggo l'indice del pesce
-			nSchool = nTimeDist = 0;
 			indexP = ocean[i].second;
-			for (int j = i + 1; j < ocean.size(); j++) {
-				compIndexS = ocean[j].first;
-				if (compIndexS == indexS) {
-					nSchool++;
-					compIndexP = ocean[j].second;
-					//se la distanza fra i due pesci
-					if (dist(p[indexP].getPos(), p[compIndexP].getPos()) > MinDist)
-						nTimeDist++;
+			int j = 0;
+			while (j < ocean.size() && split) {
+				if (j != i) {
+					compIndexS = ocean[j].first;
+					if (compIndexS == indexS) {
+						compIndexP = ocean[j].second;
+						//se la distanza fra i due pesci
+						if (!dist(p[indexP].getPos(), p[compIndexP].getPos()) > MinDist)
+							split = false;
+					}
 				}
+				j++;
 			}
 			//scorro l'array per mettere il nuovo elemento che ho tirato fuori in fondo, cosi' da mantenere l'ordine
-			if (nTimeDist == nSchool) {
+			if (split) {
 				lastIndex++;
 				int appI = i;
 				int appP = ocean[i].second;
@@ -190,7 +202,7 @@ void Ocean::SetAccelerazioni()
 		int indexS = ocean[i].first;
 		//indice del pesce appartenente al banco in esame
 		int indexP = ocean[i].second;
-		//int pesoBanco = Weight(s.getSchool(), indexS, &i);
+		int pesoBanco = Weight(ocean, indexS);
 		seenSchools(ocean, p, perceivedSchools, indexP);
 		for (int j = 0; j < perceivedSchools.size(); j++) {
 			int pesoBanco = Weight(ocean, perceivedSchools[j]);
