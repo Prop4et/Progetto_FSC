@@ -62,7 +62,7 @@ void Pesce::Nuota() {
         vel[k] += acc[k] * dt;
     }
 
-    //movimenti e grafica delle buche
+    //movimenti e grafica delle buche che vanno spostati
     for (int i = 0; i < 8; i++)
     {
         holes[i].AggiornaBuca(pos, vel);

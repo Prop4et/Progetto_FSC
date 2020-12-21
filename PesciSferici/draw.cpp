@@ -121,10 +121,10 @@ void DrawSchool()
 void DrawOcean()
 {
     DrawSchool();
-    o.Merge();
+    /*o.Merge();
     o.Split();
     o.SetAccelerazioni();
-    o.Nuota();
+    o.Nuota();*/
 }
 // ********************************************************************************************************
 void initOcean() {
