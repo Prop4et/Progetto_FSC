@@ -7,7 +7,7 @@
 #define dt 0.01
 #define LateralDistance 4
 #define VerticalDistance 2
-#define FISHNUMBER 10
+#define FISHNUMBER 1000
 #define SCHOOLNUMBER 10
 #define SCREEN_W 980
 #define SCREEN_H 980

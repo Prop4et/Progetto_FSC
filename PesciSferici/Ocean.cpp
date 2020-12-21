@@ -5,12 +5,16 @@ Ocean::Ocean() {
 	float pos[FISHNUMBER][3];
 	float vel[FISHNUMBER][3];
 	float x, y, z, vx, vy, vz;
-	x = y = z = vx = vy = vz = 0;
+	y = -10;
+	x = z = vx = vy = vz = 0;
 	for (int i = 0; i < FISHNUMBER; i++) {
 		pos[i][0] = x;
 		pos[i][1] = y;
 		pos[i][2] = z;
-		x += 2;
+		if (i % 10 == 0){
+			x += 2;
+			y = -10;
+		}
 		y += 2;
 		//srand(time(NULL));
 		vx = 2;
