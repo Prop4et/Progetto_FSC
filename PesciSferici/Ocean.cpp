@@ -1,6 +1,7 @@
 #include "Ocean.h"
 #include <vector>
 #include <algorithm>
+
 Ocean::Ocean() {
 	float pos[FISHNUMBER][3];
 	float vel[FISHNUMBER][3];
@@ -17,35 +18,21 @@ Ocean::Ocean() {
 		}
 		y += 2;
 		//srand(time(NULL));
-		vx = 2;
-		vy = 1;
+		vx = 0;
+		vy = 0;
 		vel[i][0] = vx;
 		vel[i][1] = vy;
 		vel[i][2] = 0;
-	/*pos[0][0] = 10;
-	pos[0][1] = 10;
-	pos[0][2] = 0;
-
-	vel[0][0] = 1;
-	vel[0][1] = 0.5;
-	vel[0][2] = 0;
-
-	pos[1][0] = 0;
-	pos[1][1] = 0;
-	pos[1][2] = 0;
-
-	pos[2][0] = 20;
-	pos[2][1] = 0;
-	pos[2][2] = 0;*/
-	//for (int i = 0; i < 3; i++) {
 		Pesce app = Pesce(pos[i], vel[0]);
 		p.push_back(app);
 		s.push_back(app);
-		ocean.push_back(pair<int, int>(i, i));
+		ocean.insert(pair<int, int>(i, i));
+		reversedocean.insert(pair<int, int>(i, i));
 	}
+	
 }
 
-void Ocean::addPesce()
+/*void Ocean::addPesce()
 { 
 	float x, y, z, vx, vy, vz;
 	//generare posizioni plausibili con le posizioni attuali del banco
@@ -67,8 +54,8 @@ void Ocean::addPesce()
 	//inserisco il pesce nel vector dei pesci e l'indice nel vector dei banchi
 	p.push_back(Pesce(pos, vel));
 	ocean.push_back(pair<int, int>(indexS, indexP));
-}
-void Ocean::Nuota() {
+}*/
+/*void Ocean::Nuota() {
 	itS = s.begin();
 	int i = 0;
 	float avgVel[3] = { 0, 0, 0 };
@@ -115,38 +102,32 @@ void Ocean::Nuota() {
 	for (int i = 0; i < ocean.size(); i++) {
 		p[ocean[i].second].Nuota();
 	}
-}
+}*/
 
 
-void Ocean::Merge() {
-	int indexS, indexP, compIndexS, compIndexP;
-	indexS = indexP = compIndexS = compIndexP = -1;
-	itS = s.begin();
-	for (int i = 0; i < ocean.size() - 1; i++) {
-		//estraggo l'indice del banco di cui fa parte il pesce
-		indexS = ocean[i].first;
-		if (indexS != -1) {
-			//estraggo l'indice del pesce
-			indexP = ocean[i].second;
-			for (int j = i + 1; j < ocean.size(); j++) {
-				compIndexS = ocean[j].first;
-				compIndexP = ocean[j].second;
-				//se la distanza fra i due pesci
-				if (dist(p[indexP].getPos(), p[compIndexP].getPos()) < MinDist)
-					//assegno il minimo tra i due indici se i pesci fanno parte dello stesso banco
-					//la funzione minimo viene applicato perche' il vector non ha valori monotoni crescenti nel primo campo della coppia
-					//mentre nel secondo si'
-					ocean[j].first = min(indexS, compIndexS);
+void Ocean::Merge(int indexP) {
+	int compIndexS = -1;
+	//estraggo l'indice del banco di cui fa parte il pesce
+	int indexS = ocean[indexP];
+	int j = 0;
+	bool sameS = true;
+	while(j < ocean.size() && sameS) {
+		compIndexS = ocean[j];
+		if (compIndexS != -1 && compIndexS != indexS) 
+			//se la distanza fra i due pesci
+			if (dist(p[indexP].getPos(), p[j].getPos()) < MinDist) {
+				//assegno al pesce corrente il banco con l'indice minore che gli è vicino
+				ocean[indexP] = min(indexS,compIndexS);
+				sameS = false;
 			}
-		}
+		j++;
 	}
-	sort(ocean.begin(), ocean.end());
-	itS = s.begin();
-	advance(itS, ocean[ocean.size() - 1].first+1);
-	s.erase(itS, s.end());
+	/*map<int, int>::iterator it = reversedocean.find(j);
+	while (it->second != indexP) it++;
+	(*it) = ocean[indexP];*/
 }
 
-
+/*
 void Ocean::Split() {
 	int indexS, indexP, compIndexS, compIndexP;
 	int lastIndex = ocean.back().first;
@@ -187,8 +168,8 @@ void Ocean::Split() {
 			}
 		}
 	}
-}
-
+}*/
+/*
 void Ocean::SetAccelerazioni()
 {
 	vector<int> perceivedSchools;
@@ -234,7 +215,7 @@ void Ocean::SetAccelerazioni()
 /*void Ocean::setDir(float* arr) {
 	for (int i = 0; i < 3; i++) dir[i] = arr[i];
 }*/
-
+/*
 void Ocean::computeAVGDir(int index, float* centro) {
 	int dim = 0;
 	for (int i = 0; i < ocean.size(); i++) {
@@ -250,7 +231,7 @@ void Ocean::computeAVGDir(int index, float* centro) {
 		centro[j] /= dim;
 	}
 }
-
+*/
 //TODO: calcolare l'asse per centrare il banco di pesci
 //ossia calcolare la lunghezza del banco (EZ) e calcolare l'angolo della direzione media del banco (?)
 //come se calcola l'angolo, in base a cosa? Che poi in realtà sono due angoli, uno tra x,z e uno tra x,y o z,y dipende

@@ -9,6 +9,8 @@
 #include "Potenziali.h"
 #include "School.h"
 #include <list>
+#include <map>
+
 /*Class: School
 * Description: classe che descrive un banco di pesci
 * cambiamo cose, mettiamo una coppia nel vector con -1 nel campo del banco per i pesci che muoiono nel primo campo della coppia
@@ -24,20 +26,23 @@
 */
 class Ocean {
 private:
-	vector<pair<int, int>> ocean;
+	map<int, int> ocean;//indice pesce indice banco
+	multimap<int, int> reversedocean;//indice banco indice pesce, l'indice di banco non è univoco, forse mi basta la reversed ma ora vediamo
 	list<School> s;
 	list<School>::iterator itS;
 	vector<Pesce> p; 
 	//se ho il tutto fatto cosi' o mi faccio un vector di tutto oppure calcolo on the fly, vediamo, per ora e' on the fly
 public:
 	Ocean();
+	int sharedIndex = 0;
 	//void setDir(float* arr);
-	void addPesce();
-	vector<pair<int, int>> getOcean() { return ocean; }
+	//void addPesce();
+	map<int, int> getOcean() { return ocean; }
+	multimap<int, int> getROcean() { return reversedocean; }
 	vector<Pesce> getP() { return p; }
 	list<School> getS() { return s; }
 	void Nuota();
-	void Merge();
+	void Merge(int indexP);
 	void Split();
 	void SetAccelerazioni();
 	void computeAVGDir(int i, float* centro);

@@ -73,7 +73,7 @@ void moveEverything(float px, float py, float pz, int rotateX, int rotateY, int 
 }
 
 //se passo follow per indirizzo lo modifico qua dentro e poi voglio vede se non segui quello che devi seguire
-void setCamera(int follow, bool isSchool, bool isFish, int rotateX, int rotateY, int rotateZ) {
+/*void setCamera(int follow, bool isSchool, bool isFish, int rotateX, int rotateY, int rotateZ) {
     if (follow != -1) {
         if (isSchool) {
             if (follow <= o.getOcean().back().first) {
@@ -94,35 +94,7 @@ void setCamera(int follow, bool isSchool, bool isFish, int rotateX, int rotateY,
                 cout << "Fish out of bound\n";
         }
     }
-}
-
-/*
-void rotateAxis(int *prevX, int *clickX, int *prevY, int *clickY, int x, int y) {
-    if (*prevX > *clickX)
-        glRotatef(-1, 0, 1, 0);
-    if (*prevX < *clickX)
-        glRotatef(1, 0, 1, 0);
-    *prevX = *clickX;
-    *clickX = x;
-
-    if (*prevY > *clickY)
-        glRotatef(-1, 1, 0, 0);
-    if (*prevY < *clickY)
-        glRotatef(1, 1, 0, 0);
-    *prevY = *clickY;
-    *clickY = y;
-}
-*/
-void DrawSchool()
-{   
-    for (int i = 0; i < o.getP().size(); i++)
-    {
-        glPushMatrix();
-        glTranslated(o.getP()[i].getPos()[0], o.getP()[i].getPos()[1], o.getP()[i].getPos()[2]);
-        glCallList(SFERA);
-        glPopMatrix();
-    }
-}
+}*/
 
 void drawSchool(vector<float*> pos) {
     glPushMatrix();
@@ -135,11 +107,17 @@ void drawSchool(vector<float*> pos) {
 
 void DrawOcean()
 {
-    DrawSchool();
-    o.Merge();
+    for (int i = 0; i < o.getP().size(); i++)
+    {
+        glPushMatrix();
+        glTranslated(o.getP()[i].getPos()[0], o.getP()[i].getPos()[1], o.getP()[i].getPos()[2]);
+        glCallList(SFERA);
+        glPopMatrix();
+    }
+    /*o.Merge();
     o.Split();
     o.SetAccelerazioni();
-    o.Nuota();
+    o.Nuota();*/
 }
 // ********************************************************************************************************
 void initOcean() {
@@ -154,9 +132,9 @@ void draw_scene(int follow, bool isSchool, bool isFish, int rotateX, int rotateY
     //drawSchool(Q.front());
     //Q.pop();
     //canPush.notify_one();
-    setCamera(follow, isSchool, isFish, rotateX, rotateY, rotateZ);
+    //setCamera(follow, isSchool, isFish, rotateX, rotateY, rotateZ);
 
-    DrawOcean();
+    //DrawOcean();
    
     glColor3f(0.1, 1.0, 0.1);		// redish
     

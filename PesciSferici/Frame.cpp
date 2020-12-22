@@ -46,7 +46,7 @@ void Frame::init(void) {
     glNewList(BUCA, GL_COMPILE);
     gluSphere(buca, 0.1, 30, 30);
     glEndList();
-    initOcean();
+    //initOcean();
 }
 //-----------------------------------------------------------------------------------------------
 
