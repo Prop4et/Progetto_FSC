@@ -38,6 +38,7 @@ private:
 	float omega[DIMARR]{ 0,0,0 };
 	float omegapunto[DIMARR]{ 0,0,0 };
 	float theta;
+	bool merged = false;
 public:
 	Pesce();
 	Pesce(float* p, float* v, float* a);
@@ -51,6 +52,8 @@ public:
 	float* getAcc() { return acc; }
 	Hole* getHoles() { return holes; }
 	float getTheta() { return theta; }
+	void setMerged() { merged = !merged;  }
+	bool getMerged() { return merged; }
 	void Rotazione(float* v, float* omega);
 	void Nuota();
 	float computeTheta();

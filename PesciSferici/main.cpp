@@ -39,6 +39,9 @@ void compute(Ocean &o) {
 		lck.unlock();
 		if (o.getOcean()[index] != -1) {
 			o.Merge(index);
+			if (!o.getP()[index].getMerged()) {
+				//split
+			}
 		}
 	}
 
@@ -59,6 +62,7 @@ int main(int argc, char** argv) {
 	for (int i = 0; i < o.getOcean().size(); i++) {
 		cout << o.getOcean()[i] << " ";
 	}
+
 	//Fl::run();
 	return 0;
 }

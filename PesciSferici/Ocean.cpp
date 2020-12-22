@@ -113,7 +113,7 @@ void Ocean::Merge(int indexP) {
 	int indexS = ocean[indexP];
 	int j = 0;
 	bool sameS = true;
-	while(j < ocean.size() && sameS) {
+	while(j < ocean.size() && !p[indexP].getMerged()) {
 		compIndexS = ocean[j];
 		if (compIndexS != -1 && compIndexS != indexS) 
 			//se la distanza fra i due pesci
@@ -130,6 +130,7 @@ void Ocean::Merge(int indexP) {
 						i++;
 					}
 					reversedocean[indexS].erase(reversedocean[indexS].begin()+i);
+					if (reversedocean[indexS].size() == 0) reversedocean.erase(indexS);
 				}
 					//se sono grossi uguale decido con una probabilità del 50% di restare o di andare nell'altro
 				/*else if (reversedocean[indexS].size() == reversedocean[compIndexS].size()) {
@@ -142,7 +143,7 @@ void Ocean::Merge(int indexP) {
 						ocean[indexP] = compIndexS;
 					}
 				}*/
-				sameS = false;
+				p[indexP].setMerged();
 			}
 		j++;
 	}
