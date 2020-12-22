@@ -78,12 +78,12 @@ void setCamera(int follow, bool isSchool, bool isFish, int rotateX, int rotateY,
         if (isSchool) {
             if (follow <= o.getOcean().back().first) {
                 //qua devo calcolare le coordinate 
-                float center[3] = { 0, 0, 0 };
-                o.computeAVGDir(follow, center);
-                //list<School>::iterator itS = o.getS().begin();
-                //advance(itS, follow);
-                moveEverything(center[0], center[1], center[2], rotateX, rotateY, rotateZ);
-                //moveEverything((*itS).getCenter()[0], (*itS).getCenter()[1], (*itS).getCenter()[2], rotateX, rotateY, rotateZ);
+                //float center[3] = { 0, 0, 0 };
+                //o.computeAVGDir(follow, center);
+                list<School>::iterator itS = o.getS().begin();
+                advance(itS, follow);
+                //moveEverything(center[0], center[1], center[2], rotateX, rotateY, rotateZ);
+                moveEverything((*itS).getCenter()[0], (*itS).getCenter()[1], (*itS).getCenter()[2], rotateX, rotateY, rotateZ);
             }
             else cout << "madonnu\n";
         }
