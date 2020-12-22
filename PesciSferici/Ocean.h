@@ -27,7 +27,7 @@
 class Ocean {
 private:
 	map<int, int> ocean;//indice pesce indice banco
-	multimap<int, int> reversedocean;//indice banco indice pesce, l'indice di banco non è univoco, forse mi basta la reversed ma ora vediamo
+	map<int, vector<int>> reversedocean;//indice banco indici dei pesci in quel banco
 	list<School> s;
 	list<School>::iterator itS;
 	vector<Pesce> p; 
@@ -38,7 +38,7 @@ public:
 	//void setDir(float* arr);
 	//void addPesce();
 	map<int, int> getOcean() { return ocean; }
-	multimap<int, int> getROcean() { return reversedocean; }
+	map<int, vector<int>> getROcean() { return reversedocean; }
 	vector<Pesce> getP() { return p; }
 	list<School> getS() { return s; }
 	void Nuota();

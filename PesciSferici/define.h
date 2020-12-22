@@ -8,6 +8,7 @@
 #define LateralDistance 4
 #define VerticalDistance 2
 #define FISHNUMBER 10
+#define ITNUMBER 80
 #define SCHOOLNUMBER 10
 #define SCREEN_W 980
 #define SCREEN_H 980

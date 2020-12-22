@@ -13,7 +13,6 @@ void draw_scene(int follow, bool isSchool, bool isFish, int rotateX, int rotateY
 void DrawOcean();
 //void setCamera(int follow, bool isSchool, bool isFish, int rotateX, int rotateY, int rotateZ);
 int rx = 0, ry = 0, rz = 0;
-Ocean o;
 
 //prova per potenziale repulsivo+attrattivo.
 

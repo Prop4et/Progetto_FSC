@@ -8,8 +8,8 @@
 #include <deque>
 
 #include "Ocean.h"
-#include "form.h"
-#include "frame.h"
+//#include "form.h"
+//#include "frame.h"
 
 using namespace std;
 //---------------------------------
@@ -31,7 +31,7 @@ void compute(Ocean &o) {
 	int index;
 	std::unique_lock<std::mutex> lck(mIndex, std::defer_lock);
 	//estraggo l'indice del pesce su cui devo lavorare in mutua esclusione per il numero di iterazioni che voglio fare vabè
-	for (int iter = 0; iter < 10; iter++) {
+	for (int iter = 0; iter < ITNUMBER; iter++) {
 		lck.lock();
 		index = o.sharedIndex;
 		o.sharedIndex++;
@@ -52,9 +52,9 @@ int main(int argc, char** argv) {
 //	Fl::add_timeout(1 / 120, idle_cb);
 	//Fl::add_idle(idle_cb, 0);
 	Ocean o = Ocean();
-	std::thread producer[4];
-	for(int i = 0; i < 4; i++) producer[i] = std::thread(compute, std::ref(o));
-	for (int i = 0; i < 4; i++) producer[i].join();
+	std::thread producer[1];
+	for(int i = 0; i < 1; i++) producer[i] = std::thread(compute, std::ref(o));
+	for (int i = 0; i < 1; i++) producer[i].join();
 	cout << "joined\n";
 	for (int i = 0; i < o.getOcean().size(); i++) {
 		cout << o.getOcean()[i] << " ";

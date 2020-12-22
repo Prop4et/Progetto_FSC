@@ -104,7 +104,7 @@ void drawSchool(vector<float*> pos) {
     }
     glPopMatrix();
 }
-
+/*
 void DrawOcean()
 {
     for (int i = 0; i < o.getP().size(); i++)
@@ -114,15 +114,12 @@ void DrawOcean()
         glCallList(SFERA);
         glPopMatrix();
     }
-    /*o.Merge();
+    o.Merge();
     o.Split();
     o.SetAccelerazioni();
-    o.Nuota();*/
-}
+    o.Nuota();
+}*/
 // ********************************************************************************************************
-void initOcean() {
-    Ocean o = Ocean();
-}
 
 
 void draw_scene(int follow, bool isSchool, bool isFish, int rotateX, int rotateY, int rotateZ) {

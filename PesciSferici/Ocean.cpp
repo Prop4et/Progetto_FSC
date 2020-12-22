@@ -27,7 +27,8 @@ Ocean::Ocean() {
 		p.push_back(app);
 		s.push_back(app);
 		ocean.insert(pair<int, int>(i, i));
-		reversedocean.insert(pair<int, int>(i, i));
+
+		reversedocean.insert(pair<int, vector<int>>(i, vector<int> (1,i)));
 	}
 	
 }
@@ -107,6 +108,7 @@ Ocean::Ocean() {
 
 void Ocean::Merge(int indexP) {
 	int compIndexS = -1;
+
 	//estraggo l'indice del banco di cui fa parte il pesce
 	int indexS = ocean[indexP];
 	int j = 0;
@@ -116,15 +118,34 @@ void Ocean::Merge(int indexP) {
 		if (compIndexS != -1 && compIndexS != indexS) 
 			//se la distanza fra i due pesci
 			if (dist(p[indexP].getPos(), p[j].getPos()) < MinDist) {
-				//assegno al pesce corrente il banco con l'indice minore che gli è vicino
-				ocean[indexP] = min(indexS,compIndexS);
+				//resto nel mio banco dato che è più grande, fondamentalmente resta invariato
+				//if (reversedocean[indexS].size() > reversedocean[compIndexS].size()) {
+				//}
+					//il mio banco è più piccolo quindi cambio
+				if (reversedocean[indexS].size() <= reversedocean[compIndexS].size()) { 
+					ocean[indexP] = compIndexS;
+					reversedocean[compIndexS].push_back(indexP);
+					int i = 0;
+					while (indexP != reversedocean[indexS][i]) {
+						i++;
+					}
+					reversedocean[indexS].erase(reversedocean[indexS].begin()+i);
+				}
+					//se sono grossi uguale decido con una probabilità del 50% di restare o di andare nell'altro
+				/*else if (reversedocean[indexS].size() == reversedocean[compIndexS].size()) {
+					srand(time(0));
+					int p = rand() % 10;
+					//if (p < 5) {
+						//ocean[indexP] = indexS;
+					//}
+					if(p>5) {
+						ocean[indexP] = compIndexS;
+					}
+				}*/
 				sameS = false;
 			}
 		j++;
 	}
-	/*map<int, int>::iterator it = reversedocean.find(j);
-	while (it->second != indexP) it++;
-	(*it) = ocean[indexP];*/
 }
 
 /*
