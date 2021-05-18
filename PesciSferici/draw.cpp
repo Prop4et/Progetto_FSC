@@ -62,24 +62,26 @@ void initOcean() {
     }
 }
 
-void initOcean2() {
+void initOcean2(int rangeSpawn) {
     bool too_close=false;
-    for (int i = 0; i < FISHNUMBER; i++) {
-        pos[i][0] = ((rand() % 4000 + 1)-2000)/100;
-        pos[i][1] = ((rand() % 4000 + 1) - 2000) / 100;
+    for (int i = 0; i < FISHNUMBER; i++) 
+    {
+        srand(time(NULL));
+        pos[i][0] = ((rand() % rangeSpawn * 200 + 1)-rangeSpawn*100)/100;
+        pos[i][1] = ((rand() % rangeSpawn * 200 + 1) - rangeSpawn * 100) / 100;
         pos[i][2] = 0;
         for (int g = 0; g < i; g++)
         {
             while (dist(pos[g], pos[i]) <3)
             {
-                pos[i][0] = ((rand() % 4000 + 1) - 2000) / 100;
-                pos[i][1] = ((rand() % 4000 + 1) - 2000) / 100;
+                pos[i][0] = ((rand() % rangeSpawn * 200 + 1) - rangeSpawn * 100) / 100;
+                pos[i][1] = ((rand() % rangeSpawn * 200 + 1) - rangeSpawn * 100) / 100;
             }
         }
-
-        srand(time(NULL));
-        vel[i][0] = rand() % 2 + 1;
-        vel[i][1] = rand() % 2 + 1;
+       
+  
+        vel[i][0] = 1;
+        vel[i][1] = 1;
         vel[i][2] = 0;
         p[i] = Pesce(pos[i], vel[i]);
     }

@@ -4,7 +4,7 @@
 #include <math.h>
 using namespace std;
 
-float asimmetry = 0.2f; //fattore di asimettria banco
+//float asimmetry = 0.2f; //fattore di asimettria banco
 
 //##########################
 //Funzioni e attributi generali
@@ -91,19 +91,15 @@ float AttractiveForceSchoolZ(float* PosSchool, float* VelSchool, float* PosFish,
 
 void AttractiveForcesSchool(float* PosSchool, float* VelSchool, float* PosFish, float RSchool, float *arr, int len) //Forza vettoriale per il potenziale di banco
 {
-	//float Forzexyz[3];
 	float modulV = modul3(VelSchool);
-	/*if (modulV == 0) {
-		modulV = 1;
-	}*/
+	if (modulV < 0.0001) modulV = 1;
 	float velposS = ProdottoScalare3(PosSchool, VelSchool);
 	float velposF = ProdottoScalare3(PosFish, VelSchool);
 	for (int i = 0; i < len; i++) {
 		
-		arr[i] = (1 - asimmetry) * 2 * VelSchool[i] * (velposF - velposS) / (RSchool * RSchool * modulV * modulV) //qua capita che modulV sia 0
+		arr[i] = (1 - asimmetry) * 2 * VelSchool[i] * (velposF - velposS) / (RSchool * RSchool * modulV * modulV) //qua capita che modulV sia 0->if di controllo sopra
 			+ 2 * (PosSchool[i] - PosFish[i]) / (RSchool * RSchool);
 	}
-	//return Forzexyz;
 }
 
 float AttractivePotenzialSchool(float* PosSchool, float* VelSchool, float* PosFish, float RSchool) //da finire
@@ -265,35 +261,23 @@ float AttractiveForceSchoolZ(School Banco, Pesce Fish) //calcola la media della 
 
 void AttractiveForcesSchool(School Banco, Pesce Fish, float* arr) //calcola la media della posizone dei pesci del banco(centro) e la velocità media poi fa il conto delle dimensioni massime del banco
 {
-
-	float AvgPosSchool[3] = { 0,0,0 };
-	float AvgVelSchool[3] = { 0,0,0 };
 	float r = 1;
 	float maxR[3] = { 0,0,0 };
 	//float forcesxyz[3];
 
 	for (int i = 0; i < 3; i++)
 	{
-		//calcola pos e vel media del banco (questa parte è da spostare tra le funzioni del banco)
-		for (int k = 0; k < Banco.getSchool().size(); k++)
-		{	
-			AvgPosSchool[i] += Banco.getSchool()[k]->getPos()[i];
-			AvgVelSchool[i] += Banco.getSchool()[k]->getVel()[i];
-		}
-		AvgPosSchool[i] = AvgPosSchool[i] / float(Banco.getSchool().size());
-		AvgVelSchool[i] = AvgVelSchool[i] / float(Banco.getSchool().size());
 		//trova la distanza massima lungo un asse dal centro
 		for (int k = 0; k < Banco.getSchool().size(); k++)
 		{
-			maxR[i] = maxR[i] > abs(Banco.getSchool()[k]->getPos()[i] - AvgPosSchool[i]) ?
-				maxR[i] : abs(Banco.getSchool()[k]->getPos()[i] - AvgPosSchool[i]);
+			maxR[i] = maxR[i] > abs(Banco.getSchool()[k]->getPos()[i] - Banco.getPos()[i]) ?
+				maxR[i] : abs(Banco.getSchool()[k]->getPos()[i] - Banco.getPos()[i]);
 		}
 		r = maxR[i] > r ? maxR[i] : r;
 	}
 	
 	//for (int u = 0; u < 3; u++) cout << endl << AttractiveForcesSchool(AvgPosSchool, AvgVelSchool, Fish.getPos(), r)[u] << endl;
-	return AttractiveForcesSchool(AvgPosSchool, AvgVelSchool, Fish.getPos(), r, arr, 2);
-
+	return AttractiveForcesSchool(Banco.getPos(), Banco.getVel(), Fish.getPos(), r, arr, 2);
 }
 
 //##########################
@@ -366,9 +350,11 @@ void SetAccelerazioni(vector<School>& Oceano)
 	int pesoTot = Weight(Oceano);
 	int pesoBanco;
 	for (int a = 0; a < Oceano.size(); a++)
+	{
+		Oceano[a].SetPosAndVel();
 		for (int b = 0; b < Oceano[a].getSchool().size(); b++)
 		{
-			Pesce* Fish = Oceano[a].getSchool()[b];
+			Pesce* Fish = &*Oceano[a].getSchool()[b];
 			float accTot[3] = { 0.f, 0.f, 0.f };
 			float forza[3], OmegaPunto[3]{ 0,0,0 }, OmegaPuntoVero[3]{ 0,0,0 };
 			vector<int> PerceivedSchools;
@@ -376,7 +362,7 @@ void SetAccelerazioni(vector<School>& Oceano)
 			for (int i = 0; i < Oceano.size(); i++)
 				for (int k = 0; k < Oceano[i].getSchool().size(); k++)
 					if (a != i || b != k)
-						if (dist(Fish->getPos(), Oceano[i].getSchool()[k]->getPos()) < MinDist+1000) //da aggiungere campo visivo (così sono pesci cieci, solo sensori)
+						if (dist(Fish->getPos(), Oceano[i].getSchool()[k]->getPos()) < MinDist ) //da aggiungere campo visivo (così sono pesci cieci, solo sensori)
 						{
 							PerceivedSchools.push_back(i);
 							k = Oceano[i].getSchool().size();
@@ -398,14 +384,11 @@ void SetAccelerazioni(vector<School>& Oceano)
 				
 						if (dist(Fish->getPos(), Oceano[PerceivedSchools[i]].getSchool()[j]->getPos()) < MinDist) //sente solo le repulsioni dei pesci vicini, per risparmiare conti
 						{
-							/*	omegaPuntoJack(*Oceano[PerceivedSchools[i]].getSchool()[j], *Fish, OmegaPunto);
-					for (int u=0; u<3; u++)
-					OmegaPuntoVero[u] += OmegaPunto[u];*/
 							RepulsiveForcesFish(*Oceano[PerceivedSchools[i]].getSchool()[j], *Fish, forza);
 							for (int u = 0; u < 3; u++)
-							{
 								accTot[u] += forza[u] / massa;
-							}
+
+
 							//potenziali buche
 							for (int h = 0; h < 8; h++)
 							{
@@ -423,4 +406,6 @@ void SetAccelerazioni(vector<School>& Oceano)
 			Fish->setAcc(accTot);
 			Fish->setOmegaPunto(OmegaPuntoVero);
 		}
+
 }
+

@@ -7,5 +7,6 @@
 #define dt 0.01
 #define LateralDistance 5
 #define VerticalDistance 3
-#define FISHNUMBER 5
-#define SCHOOLNUMBER 5
+#define FISHNUMBER 3
+#define SCHOOLNUMBER 3
+#define asimmetry 0.2f

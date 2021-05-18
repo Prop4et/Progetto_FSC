@@ -5,25 +5,26 @@
 School::School(vector<Pesce*> s) {
 	for (int i = 0; i < s.size(); i++)
 		school.push_back(s[i]);
-	for (int i = 0; i < 3; i++) dir[i] = 0;
+	SetPosAndVel();
 }
 
-void School::setDir(float* arr) {
-	for (int i = 0; i < 3; i++) dir[i] = arr[i];
-}
 
-void School::computeAVGDir() {
-	int i = 0;
-	float avgcentro[3] = { 0,0,0 };
-	for (int j = 0; j < school.size(); j++) {
-		for (i = 0; i < 3; i++)
-			avgcentro[i] += school[j]->getPos()[i];
+void School::SetPosAndVel() {
+	for (int i = 0; i < 3; i++)
+	{
+		pos[i] = 0;
+		vel[i] = 0;
+		for (int j = 0; j < school.size(); j++)
+		{
+			pos[i] += school[j]->getPos()[i];
+			vel[i] += school[j]->getVel()[i];
+		}
+		if (school.size())
+		{
+			pos[i] = pos[i] / school.size();
+			vel[i] = vel[i] / school.size();
+		}
 	}
-	for (i = 0; i < 3; i++) {
-		avgcentro[i] = avgcentro[i] / school.size();
-		//printf("%f ", avgcentro[i]);
-	}
-	printf("\n");
 }
 
 //TODO: calcolare l'asse per centrare il banco di pesci
@@ -40,7 +41,7 @@ void draw_direction(float x, float y, float z) {
 
 void School::DrawSchool()
 {	
-	float avgdir[3] = { 0,0,0 };
+	float avgvel[3] = { 0,0,0 };
 	for (int i = 0; i < school.size(); i++)
 	{
 		school[i]->Nuota();
