@@ -6,7 +6,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include "define.h"
-
+//#include "utilities.h"
+//#include "Potenziali.h"
 
 #pragma once
 //#define L 5
@@ -35,6 +36,8 @@ private:
 	float acc[DIMARR];
 	Hole holes[8];
 	float theta;
+	float omega[DIMARR]{0,0,0};
+	float omegapunto[DIMARR]{ 0,0,0 };
 public:
 	Pesce();
 	Pesce(float* p, float* v, float* a);
@@ -43,6 +46,7 @@ public:
 	void setVel(float* v);
 	void setAcc(float* a);
 	void setTheta(float t);
+	void setOmegaPunto(float*);
 	float* getPos() { return pos; }
 	float* getVel() { return vel; }
 	float* getAcc() { return acc; }
@@ -51,4 +55,6 @@ public:
 	void Nuota();
 	void NuotainCerchio(float& t, int i);
 	float computeTheta();
+	void computePolarization();
+	void computePolJack();
 };

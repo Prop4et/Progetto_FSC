@@ -135,3 +135,9 @@ void Merge(vector<School>& Oceano)
 		}
 	}
 }
+
+
+
+//extern float AttractivePotenzialHole(float*, float*);
+
+

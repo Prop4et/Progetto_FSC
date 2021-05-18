@@ -95,6 +95,12 @@ void initOcean2(int rangeSpawn) {
 
 
 void draw_scene(void) {
+ /*   if (init==false)
+    {
+        initOcean2();
+        init = true;
+    }
+ */   
     DrawOcean(pozza);
 
 

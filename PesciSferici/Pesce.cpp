@@ -1,7 +1,8 @@
 #include "Pesce.h"
 #include <iostream>
-
-
+extern float modul3(float*);
+//extern float omegaPunto(Pesce, Pesce, float*);
+extern void Rotazione(float*, float*);
 
 
 Pesce::Pesce() {
@@ -45,6 +46,13 @@ void Pesce::setAcc(float* a) {
         acc[i] = a[i];
 }
 
+void Pesce::setOmegaPunto(float* o)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        omegapunto[i] = o[i];
+    }
+}
 
 void Pesce::setTheta(float t) {
     theta = t;
@@ -56,6 +64,7 @@ void Pesce::Nuota() {
     for (int k = 0; k < DIMARR; ++k)
     {
         
+        omega[k] += omegapunto[k] * dt;
         pos[k] += vel[k] * dt;
         vel[k] += acc[k] * dt;
         //if (vel[k]>0.001) acc[k] += -dt*vel[k]/abs(vel[k]); //attrito viscoso
@@ -63,7 +72,7 @@ void Pesce::Nuota() {
         //if (vel[k] > 0.001) acc[k] += -dt * pow(vel[k], 5) / (abs(vel[k]) + 0.0000001); //attrito viscoso
        // else  acc[k] += -vel[k] * dt;
     }
-
+    
     //movimenti e grafica delle buche
     for (int i = 0; i < 8; i++)
     {
@@ -74,6 +83,10 @@ void Pesce::Nuota() {
         glCallList(BUCA);
         glPopMatrix();
     }
+
+    //Rotazione(vel, omega);
+    //computePolJack(); 
+    //computePolarization(); //c'è un qualche problemino, non trovo il dove
 }
 
 void Pesce::NuotainCerchio(float& t, int i) {
@@ -89,4 +102,53 @@ void Pesce::NuotainCerchio(float& t, int i) {
 
 float Pesce::computeTheta() {
     return atan2f(vel[1], vel[0]) * (180 / M_PI);
+}
+
+
+
+void Pesce::computePolarization()
+{
+    
+    float spostheta;
+    float omeganorm[3], prevel[3];
+    for (int i = 0; i < 3; i++)
+    {
+        omega[i] += omegapunto[i] * dt;
+        omeganorm[i] = omega[i] / modul3(omega);
+        prevel[i] = vel[i];
+    }
+
+    spostheta = modul3(omega)*dt;
+   
+    for (int riga = 0; riga < 3; riga++)
+    {
+        for (int colonna = 0; colonna < 3; colonna++)
+        {
+            vel[riga] += prevel[colonna] * (omeganorm[riga] * omeganorm[colonna] * (1 - cosf(spostheta)));
+            if (colonna == riga)
+            {
+                vel[riga] += prevel[colonna] * cosf(spostheta);
+            }
+            else
+            {
+                if (colonna > riga)
+                {
+                    vel[riga] += prevel[colonna] * (omeganorm[5 - (colonna + riga + 2)] * sinf(spostheta) * (powf(-1.f, (riga + colonna))));
+                }
+                else
+                {
+                    vel[riga] += prevel[colonna] * (omeganorm[5 - (colonna + riga + 2)] * sinf(spostheta) * (powf(-1.f, (riga + colonna+1))));
+
+                }
+            }
+
+        }
+    }
+}
+
+void Pesce::computePolJack()
+{
+    for (int i = 0; i < 3; i++)
+        omega[i] += omegapunto[i]*dt;
+    Rotazione(vel, omega);
 }
